@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="sign_in_bg">#7467F2E0</color>
+    <color name="sign_in_btn">#7463A0EF</color>
+    <color name="sign_up_btn">#00BCD4</color>
+    <color name="inputbg">#CFD5E4</color>
 </resources>

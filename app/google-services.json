@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "545402318556",
+    "project_id": "login-android-45ec6",
+    "storage_bucket": "login-android-45ec6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545402318556:android:41732a905302a2a8d40e19",
+        "android_client_info": {
+          "package_name": "com.example.food_app_planner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDGKxYBnoxmKcVZlvSMAXWzXF7qBQvD1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

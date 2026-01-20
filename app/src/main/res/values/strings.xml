@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Food_App_Planner</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="server_client_id">272372646105-s1eovsrbhtuess8uo9i6tu0sdp59t0dc.apps.googleusercontent.com</string>
+    <string name="client_id">545402318556-8memou052hbekobrojbhtiok4nd67rn2.apps.googleusercontent.com</string>
+
 </resources>
