@@ -1,4 +1,4 @@
-package com.example.food_app_planner;
+package com.example.food_app_planner.archistartcode;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.example.food_app_planner.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -77,21 +77,21 @@ public class SignIn_Fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        goToSignUp=view.findViewById(R.id.signUp_btn);
-        goToSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onSignUpClickListener1!=null){
-                    SignUpFragment signUpFragment=new SignUpFragment();
-                    onSignUpClickListener1.onSignUpClickListener(signUpFragment);
-
-                }else {
-                    Toast.makeText(getContext(), "Listener not set", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
+       // goToSignUp=view.findViewById(R.id.signUp_btn);
+//        goToSignUp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(onSignUpClickListener1!=null){
+//                    SignUpFragment signUpFragment=new SignUpFragment();
+//                    onSignUpClickListener1.onSignUpClickListener(signUpFragment);
+//
+//                }else {
+//                    Toast.makeText(getContext(), "Listener not set", Toast.LENGTH_SHORT).show();
+//                }
+//
+//
+//            }
+//        });
 
 
         checkCurrentUser();

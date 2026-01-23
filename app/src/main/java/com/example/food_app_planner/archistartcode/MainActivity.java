@@ -1,9 +1,11 @@
-package com.example.food_app_planner;
+package com.example.food_app_planner.archistartcode;
 
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.food_app_planner.R;
 
 
 public class MainActivity extends AppCompatActivity {

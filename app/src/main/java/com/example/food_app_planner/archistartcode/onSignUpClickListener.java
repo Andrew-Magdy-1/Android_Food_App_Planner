@@ -1,4 +1,4 @@
-package com.example.food_app_planner;
+package com.example.food_app_planner.archistartcode;
 
 import androidx.fragment.app.Fragment;
 

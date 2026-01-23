@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_bottom_nav"
+    app:startDestination="@id/homeIconFragment">
+
+    <fragment
+        android:id="@+id/homeIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.HomeIconFragment"
+        android:label="fragment_home_icon"
+        tools:layout="@layout/fragment_home_icon" />
+    <fragment
+        android:id="@+id/searchIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.SearchIconFragment"
+        android:label="fragment_search_icon"
+        tools:layout="@layout/fragment_search_icon" />
+    <fragment
+        android:id="@+id/plannerIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.PlannerIconFragment"
+        android:label="fragment_planner_icon"
+        tools:layout="@layout/fragment_planner_icon" />
+    <fragment
+        android:id="@+id/favouriteIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.FavouriteIconFragment"
+        android:label="fragment_favourite_icon"
+        tools:layout="@layout/fragment_favourite_icon" />
+</navigation>
