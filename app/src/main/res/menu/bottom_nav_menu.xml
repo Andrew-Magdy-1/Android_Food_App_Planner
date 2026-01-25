@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/my_bottom_nav"
+        android:id="@+id/homeIconFragment"
         android:title="Home"
         android:icon="@drawable/baseline_home_24"
         />
@@ -18,4 +18,8 @@
         android:id="@+id/favouriteIconFragment"
         android:title="Favourits"
         android:icon="@drawable/baseline_favorite_border_24"/>
+    <item
+        android:id="@+id/countrypage"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="Country" />
 </menu>

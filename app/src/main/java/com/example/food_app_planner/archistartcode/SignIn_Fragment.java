@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.food_app_planner.R;
+import com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -23,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +35,7 @@ public class SignIn_Fragment extends Fragment {
 
     private static final int RC_SIGN_IN = 1001;
     private static final String TAG = "SignInFragment";
-
+    MaterialButton materialButton;
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth mAuth;
     private ImageView googleSignInButton;
@@ -64,6 +66,15 @@ public class SignIn_Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_sign_in_, container, false);
         googleSignInButton = view.findViewById(R.id.google_login_btn);
+        materialButton=view.findViewById(R.id.signInButton);
+        materialButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), HomePage.class);
+                startActivity(intent);
+
+            }
+        });
         googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
