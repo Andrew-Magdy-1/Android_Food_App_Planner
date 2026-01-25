@@ -4,4 +4,6 @@
     <string name="server_client_id">272372646105-s1eovsrbhtuess8uo9i6tu0sdp59t0dc.apps.googleusercontent.com</string>
     <string name="client_id">545402318556-8memou052hbekobrojbhtiok4nd67rn2.apps.googleusercontent.com</string>
 
+    <string name="see_all"><u>See all</u></string>
+
 </resources>

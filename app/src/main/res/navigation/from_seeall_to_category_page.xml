@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/from_seeall_to_category_page"
+    app:startDestination="@id/homePageFragment">
+
+    <fragment
+        android:id="@+id/homePageFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePageFragment"
+        android:label="fragment_home_page"
+        tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_homePageFragment_to_categoryPageFragment"
+            app:destination="@id/categoryPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryPageFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.categorypage.view.CategoryPageFragment"
+        android:label="fragment_category_page"
+        tools:layout="@layout/fragment_category_page" />
+</navigation>

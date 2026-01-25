@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Food_App_Planner"
         tools:targetApi="31">
         <activity
-            android:name=".archistartcode.HomePage"
+            android:name=".archistartcode.presentation.homepage.view.HomePage"
             android:exported="false" />
         <!-- <activity -->
         <!-- android:name=".AuthActivity" -->

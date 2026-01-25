@@ -7,9 +7,30 @@
 
     <fragment
         android:id="@+id/homeIconFragment"
-        android:name="com.example.food_app_planner.archistartcode.HomeIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePageFragment"
         android:label="fragment_home_icon"
-        tools:layout="@layout/fragment_home_icon" />
+        tools:layout="@layout/fragment_home_icon" >
+        <action
+            android:id="@+id/action_homeIconFragment_to_categoryPageFragment"
+            app:destination="@id/categoryPageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryPageFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.categorypage.view.CategoryPageFragment"
+        android:label="Categories"
+        tools:layout="@layout/fragment_category_page" >
+        <action
+            android:id="@+id/action_categoryPageFragment_to_specificCategoryPageFragment"
+            app:destination="@id/specificCategoryPageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/specificCategoryPageFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.view.SpecificCategoryPageFragment"
+        android:label="Category Details"
+        tools:layout="@layout/fragment_specific_category_page" />
+
     <fragment
         android:id="@+id/searchIconFragment"
         android:name="com.example.food_app_planner.archistartcode.SearchIconFragment"
@@ -25,4 +46,23 @@
         android:name="com.example.food_app_planner.archistartcode.FavouriteIconFragment"
         android:label="fragment_favourite_icon"
         tools:layout="@layout/fragment_favourite_icon" />
+
+    <!-- Country Page -->
+    <fragment
+        android:id="@+id/countrypage"
+        android:name="com.example.food_app_planner.archistartcode.presentation.countrypage.view.CountryPageFragment"
+        android:label="Countries"
+        tools:layout="@layout/fragment_country_page" >
+        <!-- ✅ ضيف الـ action ده -->
+        <action
+            android:id="@+id/action_countrypage_to_specificAreaFragment"
+            app:destination="@id/specificAreaFragment" />
+    </fragment>
+
+    <!-- ✅ ضيف الـ Fragment ده -->
+    <fragment
+        android:id="@+id/specificAreaFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.specificarea.view.SpecificAreaFragment"
+        android:label="Area Details"
+        tools:layout="@layout/fragment_specific_area" />
 </navigation>
