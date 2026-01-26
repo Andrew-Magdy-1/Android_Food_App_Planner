@@ -18,14 +18,14 @@ import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.category.Category;
 import com.example.food_app_planner.archistartcode.data.datasource.models.randommeal.RandomMeal;
 import com.example.food_app_planner.archistartcode.presentation.categorypage.view.CategoryPageFragment;
-import com.example.food_app_planner.archistartcode.presentation.categorypage.view.CategoryPageFragmentAdapter;
 import com.example.food_app_planner.archistartcode.presentation.homepage.presenter.HomePagePresenter;
 import com.example.food_app_planner.archistartcode.presentation.homepage.presenter.HomePagePresenterImp;
+import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.OnClickMealListener;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class HomePageFragment extends Fragment implements HomePageView {
+public class HomePageFragment extends Fragment implements HomePageView, OnClickMealListener {
     private RecyclerView categoryRc;
     private ImageView cardImage;
     private TextView cardTitle, cardDescription, area;
@@ -34,6 +34,7 @@ public class HomePageFragment extends Fragment implements HomePageView {
     private RandomMeal randomMeal;
     private List<Category> categoryList;
     HomePagePresenter homePagePresenter;
+    private OnClickMealListener onClickMealListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,24 +59,10 @@ public class HomePageFragment extends Fragment implements HomePageView {
                         .navigate(R.id.categoryPageFragment,bundle);
             }
         });
-//        gotoCat.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Bundle bundle = new Bundle();
-//                CategoryPageFragment categoryFragment = new CategoryPageFragment();
-//                bundle.putSerializable("categories", (Serializable) categoryList);
-//                categoryFragment.setArguments(bundle);
-//                requireActivity().getSupportFragmentManager()
-//                                .beginTransaction()
-//                                        .replace(R.id.homeFragmentContainer,categoryFragment)
-//                                                .addToBackStack(null)
-//                                                        .commit();
-//
-//            }
-//        });
         homePagePresenter = new HomePagePresenterImp(getContext(), this);
         homePagePresenter.getCategories();
         homePagePresenter.getRandomMeal();
+        setOnClickMealListener(this);
 
         categoryRc = view.findViewById(R.id.categoryRc);
         setupCategoryRecycler();
@@ -100,15 +87,27 @@ public class HomePageFragment extends Fragment implements HomePageView {
             //showRandomMeal(randomMeal);
         }
     }
+    public void setOnClickMealListener(OnClickMealListener onClickMealListener){
+        this.onClickMealListener=onClickMealListener;
+    }
+
 
     @Override
     public void onSuccessRandoms(List<RandomMeal> randomMealList) {
+
         cardTitle.setText(randomMealList.get(0).getStrCategory());
         cardDescription.setText(randomMealList.get(0).getStrArea());
         area.setText(randomMealList.get(0).getStrArea());
         Glide.with(this)
                 .load(randomMealList.get(0).getStrMealThumb())
                 .into(cardImage);
+        cardImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickMealListener.onClickMeal(randomMealList.get(0).getIdMeal());
+            }
+        });
+
 
     }
 
@@ -131,5 +130,10 @@ public class HomePageFragment extends Fragment implements HomePageView {
     }
 
 
-
+    @Override
+    public void onClickMeal(String id) {
+        Bundle bundle=new Bundle();
+        bundle.putString("Meal_id",id);
+        NavHostFragment.findNavController(HomePageFragment.this).navigate(R.id.action_homeIconFragment_to_mealByIdFragment,bundle);
+    }
 }

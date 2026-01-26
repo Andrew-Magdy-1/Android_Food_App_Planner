@@ -12,14 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMeals;
+import com.example.food_app_planner.archistartcode.data.datasource.models.filterbycategoryname.CategoryDetails;
+import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.OnClickMealListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpecificAreaAdapter extends RecyclerView.Adapter<SpecificAreaAdapter.AreaVh> {
     private List<AreaMeals> areaMealsList;
+
+    private OnClickMealListener onClickMealListener;
     public SpecificAreaAdapter(){
         this.areaMealsList=new ArrayList<>();
+    }
+    public void setOnClickMealListener(OnClickMealListener onClickMealListener){
+        this.onClickMealListener=onClickMealListener;
     }
     @NonNull
     @Override
@@ -53,6 +60,14 @@ public class SpecificAreaAdapter extends RecyclerView.Adapter<SpecificAreaAdapte
             super(itemView);
             img=itemView.findViewById(R.id.areamealImage);
             title=itemView.findViewById(R.id.areamealTitle);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    AreaMeals category = areaMealsList.get(position);
+                    onClickMealListener.onClickMeal(category.getIdMeal());
+                }
+            });
         }
         public void bind(AreaMeals areaMeals){
             Glide.with(itemView).load(areaMeals.getStrMealThumb()).into(img);

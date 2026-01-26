@@ -1,8 +1,13 @@
 package com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MealById {
+
     private String idMeal;
     private String strMeal;
+    private String strMealAlternate;
     private String strCategory;
     private String strArea;
     private String strInstructions;
@@ -29,6 +34,34 @@ public class MealById {
     private String strIngredient18;
     private String strIngredient19;
     private String strIngredient20;
+    private String strMeasure1;
+    private String strMeasure2;
+    private String strMeasure3;
+    private String strMeasure4;
+    private String strMeasure5;
+    private String strMeasure6;
+    private String strMeasure7;
+    private String strMeasure8;
+    private String strMeasure9;
+    private String strMeasure10;
+    private String strMeasure11;
+    private String strMeasure12;
+    private String strMeasure13;
+    private String strMeasure14;
+    private String strMeasure15;
+    private String strMeasure16;
+    private String strMeasure17;
+    private String strMeasure18;
+    private String strMeasure19;
+    private String strMeasure20;
+    private String strSource;
+    private String strImageSource;
+    private String strCreativeCommonsConfirmed;
+    private String dateModified;
+
+    public String getStrIngredient3() {
+        return strIngredient3;
+    }
 
     public String getIdMeal() {
         return idMeal;
@@ -38,17 +71,16 @@ public class MealById {
         return strMeal;
     }
 
+    public String getStrMealAlternate() {
+        return strMealAlternate;
+    }
+
     public String getStrCategory() {
         return strCategory;
     }
 
     public String getStrArea() {
         return strArea;
-    }
-
-    public String getStrYoutube() {
-
-        return strYoutube;
     }
 
     public String getStrInstructions() {
@@ -63,16 +95,16 @@ public class MealById {
         return strTags;
     }
 
+    public String getStrYoutube() {
+        return strYoutube;
+    }
+
     public String getStrIngredient1() {
         return strIngredient1;
     }
 
     public String getStrIngredient2() {
         return strIngredient2;
-    }
-
-    public String getStrIngredient3() {
-        return strIngredient3;
     }
 
     public String getStrIngredient4() {
@@ -143,37 +175,145 @@ public class MealById {
         return strIngredient20;
     }
 
+    public String getStrMeasure1() {
+        return strMeasure1;
+    }
+
+    public String getStrMeasure2() {
+        return strMeasure2;
+    }
+
+    public String getStrMeasure3() {
+        return strMeasure3;
+    }
+
+    public String getStrMeasure4() {
+        return strMeasure4;
+    }
+
+    public String getStrMeasure5() {
+        return strMeasure5;
+    }
+
+    public String getStrMeasure6() {
+        return strMeasure6;
+    }
+
+    public String getStrMeasure7() {
+        return strMeasure7;
+    }
+
+    public String getStrMeasure8() {
+        return strMeasure8;
+    }
+
+    public String getStrMeasure9() {
+        return strMeasure9;
+    }
+
+    public String getStrMeasure10() {
+        return strMeasure10;
+    }
+
+    public String getStrMeasure11() {
+        return strMeasure11;
+    }
+
+    public String getStrMeasure12() {
+        return strMeasure12;
+    }
+
+    public String getStrMeasure13() {
+        return strMeasure13;
+    }
+
+    public String getStrMeasure14() {
+        return strMeasure14;
+    }
+
+    public String getStrMeasure15() {
+        return strMeasure15;
+    }
+
+    public String getStrMeasure16() {
+        return strMeasure16;
+    }
+
+    public String getStrMeasure17() {
+        return strMeasure17;
+    }
+
+    public String getStrMeasure18() {
+        return strMeasure18;
+    }
+
+    public String getStrMeasure19() {
+        return strMeasure19;
+    }
+
+    public String getStrMeasure20() {
+        return strMeasure20;
+    }
+
+    public String getStrSource() {
+        return strSource;
+    }
+
+    public String getStrImageSource() {
+        return strImageSource;
+    }
+
+    public String getStrCreativeCommonsConfirmed() {
+        return strCreativeCommonsConfirmed;
+    }
+
+    public String getDateModified() {
+        return dateModified;
+    }
+
+    public List<String> getAllIngredients() {
+        List<String> ingredients = new ArrayList<>();
+
+        String[] ingArray = {
+                strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
+                strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10,
+                strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15,
+                strIngredient16, strIngredient17, strIngredient18, strIngredient19, strIngredient20
+        };
+
+        for (String ing : ingArray) {
+            if (ing != null && !ing.trim().isEmpty()) {
+                ingredients.add(ing.trim());
+            }
+        }
+        return ingredients;
+    }
+
+    public List<String> getAllMeasures() {
+        List<String> measures = new ArrayList<>();
+
+        String[] measureArray = {
+                strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5,
+                strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10,
+                strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15,
+                strMeasure16, strMeasure17, strMeasure18, strMeasure19, strMeasure20
+        };
+
+        for (String measure : measureArray) {
+            if (measure != null && !measure.trim().isEmpty()) {
+                measures.add(measure.trim());
+            }
+        }
+        return measures;
+    }
+
     @Override
     public String toString() {
-        return "RandomMeal{" +
+        return "MealById{" +
                 "idMeal='" + idMeal + '\'' +
                 ", strMeal='" + strMeal + '\'' +
                 ", strCategory='" + strCategory + '\'' +
                 ", strArea='" + strArea + '\'' +
-                ", strInstructions='" + strInstructions + '\'' +
-                ", strMealThumb='" + strMealThumb + '\'' +
-                ", strTags='" + strTags + '\'' +
-                ", strYoutube='" + strYoutube + '\'' +
-                ", strIngredient1='" + strIngredient1 + '\'' +
-                ", strIngredient2='" + strIngredient2 + '\'' +
-                ", strIngredient3='" + strIngredient3 + '\'' +
-                ", strIngredient4='" + strIngredient4 + '\'' +
-                ", strIngredient5='" + strIngredient5 + '\'' +
-                ", strIngredient6='" + strIngredient6 + '\'' +
-                ", strIngredient7='" + strIngredient7 + '\'' +
-                ", strIngredient8='" + strIngredient8 + '\'' +
-                ", strIngredient9='" + strIngredient9 + '\'' +
-                ", strIngredient10='" + strIngredient10 + '\'' +
-                ", strIngredient11='" + strIngredient11 + '\'' +
-                ", strIngredient12='" + strIngredient12 + '\'' +
-                ", strIngredient13='" + strIngredient13 + '\'' +
-                ", strIngredient14='" + strIngredient14 + '\'' +
-                ", strIngredient15='" + strIngredient15 + '\'' +
-                ", strIngredient16='" + strIngredient16 + '\'' +
-                ", strIngredient17='" + strIngredient17 + '\'' +
-                ", strIngredient18='" + strIngredient18 + '\'' +
-                ", strIngredient19='" + strIngredient19 + '\'' +
-                ", strIngredient20='" + strIngredient20 + '\'' +
                 '}';
     }
 }

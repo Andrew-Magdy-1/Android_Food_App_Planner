@@ -13,15 +13,19 @@ import com.bumptech.glide.Glide;
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.category.Category;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbycategoryname.CategoryDetails;
-import com.example.food_app_planner.archistartcode.presentation.homepage.view.CategoryAdapter;
+import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.OnClickMealListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpecificCategoryAdapter extends RecyclerView.Adapter<SpecificCategoryAdapter.SpecificCategoryVh> {
     private List<CategoryDetails> categoryDetailsList;
+    private OnClickMealListener onClickMealListener;
     public SpecificCategoryAdapter(){
         categoryDetailsList=new ArrayList<>();
+    }
+    public void setOnClickMealListener(OnClickMealListener onClickMealListener){
+        this.onClickMealListener=onClickMealListener;
     }
 
     @NonNull
@@ -58,6 +62,14 @@ public class SpecificCategoryAdapter extends RecyclerView.Adapter<SpecificCatego
             super(itemView);
             img=itemView.findViewById(R.id.mealImage);
             title=itemView.findViewById(R.id.mealTitle);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    CategoryDetails category = categoryDetailsList.get(position);
+                    onClickMealListener.onClickMeal(category.getIdMeal());
+                }
+            });
 
         }
         public void bind(CategoryDetails categoryDetails){
