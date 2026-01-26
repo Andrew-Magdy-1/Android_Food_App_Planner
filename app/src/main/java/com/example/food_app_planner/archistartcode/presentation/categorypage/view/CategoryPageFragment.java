@@ -56,10 +56,8 @@ public class CategoryPageFragment extends Fragment implements OnClickCategoryCli
 
     @Override
     public void onClick(String catName) {
-
         Bundle bundle=new Bundle();
         bundle.putString("CATEGORY_NAME",catName);
-        SpecificCategoryPageFragment fragment = new SpecificCategoryPageFragment();
         NavHostFragment.findNavController(CategoryPageFragment.this)
                 .navigate(R.id.action_categoryPageFragment_to_specificCategoryPageFragment, bundle);
 

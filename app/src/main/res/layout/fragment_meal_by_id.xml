@@ -1,14 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".archistartcode.presentation.mealbyid.view.MealByIdFragment">
+    android:background="#FFFFFF"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="0dp">
 
-</FrameLayout>
+        <!-- Header Image with Gradient Overlay -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:elevation="4dp">
+
+            <!-- Main Food Image -->
+            <ImageView
+                android:id="@+id/ivFoodImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo"
+                android:contentDescription="Food Image" />
+
+            <!-- Gradient Overlay -->
+
+
+            <!-- Heart Icon with Modern Design -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabFavorite"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="20dp"
+                android:backgroundTint="#FFFFFF"
+                android:src="@drawable/baseline_favorite_border_24"
+                app:fabCustomSize="56dp"
+                app:tint="#FF4757"
+                app:elevation="8dp"
+                app:rippleColor="#FF4757" />
+
+            <!-- Back Button -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="top|start"
+                android:layout_margin="20dp"
+                app:backgroundTint="#FFFFFF"
+                app:tint="#2D2D2D"
+                app:elevation="6dp"
+                app:fabCustomSize="48dp" />
+
+        </FrameLayout>
+
+        <!-- Content Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-100dp"
+            android:layout_marginHorizontal="20dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="12dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Title and Category -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <TextView
+                        android:id="@+id/tvFoodTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Grilled Salmon"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A"
+                        android:lineSpacingExtra="2dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/baseline_favorite"
+                            android:tint="#FF7A45"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/catName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Star Fish Restaurant"
+                            android:textSize="15sp"
+                            android:textColor="#FF7A45"
+                             />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Ingredients Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ingredients"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="#FF7A45" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fresh ingredients for the perfect taste"
+                        android:textSize="14sp"
+                        android:textColor="#888888"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Ingredients RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvIngredients"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:clipToPadding="false"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="8dp"
+                        android:overScrollMode="never"
+                        tools:listitem="@layout/item_ingredient" />
+
+                </LinearLayout>
+
+                <!-- Video Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cooking Video"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="#3498DB" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Watch how to prepare this delicious meal"
+                        android:textSize="14sp"
+                        android:textColor="#888888"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- YouTube Player -->
+                    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                        android:id="@+id/youtubePlayerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginBottom="16dp"
+                        app:autoPlay="false" />
+
+                    <!-- Video Placeholder (shown when no video) -->
+                    <LinearLayout
+                        android:id="@+id/videoPlaceholder"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Video Not Available"
+                            android:textSize="16sp"
+                            android:textColor="#2D2D2D"
+                            android:layout_marginTop="12dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Description Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="32dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A"
+                        android:drawablePadding="8dp"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Description Text -->
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Vestibulum molestie et enim eu interdum. Vivamus dolor ante, mollis vel semper in, euismod ac nisl. Sed vitae."
+                        android:textSize="15sp"
+                        android:textColor="#555555"
+                        android:lineSpacingExtra="6dp" />
+
+                </LinearLayout>
+
+                <!-- Action Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center">
+
+                    <!-- Add to Cart Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAddToCart"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="Add to Cart"
+                        android:textSize="16sp"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="#3498DB"
+                        app:elevation="4dp" />
+
+                    <!-- Order Now Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOrderNow"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="Order Now"
+                        android:textSize="16sp"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="#27AE60"
+                        app:elevation="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

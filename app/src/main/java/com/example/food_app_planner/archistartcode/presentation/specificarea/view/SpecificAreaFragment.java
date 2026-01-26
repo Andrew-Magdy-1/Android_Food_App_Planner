@@ -3,6 +3,7 @@ package com.example.food_app_planner.archistartcode.presentation.specificarea.vi
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -14,13 +15,14 @@ import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMeals;
 import com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.presenter.SpecificCategoryPresenter;
 import com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.view.SpecificCategoryAdapter;
+import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.OnClickMealListener;
 import com.example.food_app_planner.archistartcode.presentation.specificarea.presenter.SpecificAreaPresenter;
 import com.example.food_app_planner.archistartcode.presentation.specificarea.presenter.SpecificAreaPresenterImp;
 
 import java.util.List;
 
 
-public class SpecificAreaFragment extends Fragment implements SpecificAreaView,OnClickAreaListener{
+public class SpecificAreaFragment extends Fragment implements SpecificAreaView,OnClickAreaListener, OnClickMealListener {
     RecyclerView recyclerView;
     SpecificAreaPresenter specificAreaPresenter;
     SpecificAreaAdapter specificAreaAdapter;
@@ -37,6 +39,7 @@ public class SpecificAreaFragment extends Fragment implements SpecificAreaView,O
         specificAreaAdapter=new SpecificAreaAdapter();
         recyclerView.setAdapter(specificAreaAdapter);
         areaname=getArguments().getString("AREA_NAME");
+        specificAreaAdapter.setOnClickMealListener(this);
         specificAreaPresenter=new SpecificAreaPresenterImp(getContext(),this,areaname);
         specificAreaPresenter.getAllAreaMeal();
 
@@ -60,5 +63,13 @@ public class SpecificAreaFragment extends Fragment implements SpecificAreaView,O
     @Override
     public void getAreaName(String areaName) {
         this.areaname=areaName;
+    }
+
+    @Override
+    public void onClickMeal(String id) {
+        Bundle bundle=new Bundle();
+        bundle.putString("Meal_id",id);
+        NavHostFragment.findNavController(SpecificAreaFragment.this).navigate(R.id.action_specificAreaFragment_to_mealByIdFragment,bundle);
+
     }
 }
