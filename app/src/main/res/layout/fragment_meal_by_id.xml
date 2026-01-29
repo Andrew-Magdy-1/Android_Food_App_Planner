@@ -256,12 +256,12 @@
 
                     <!-- Add to Cart Button -->
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnAddToCart"
+                        android:id="@+id/btnAddToPlan"
                         android:layout_width="0dp"
                         android:layout_height="56dp"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:text="Add to Cart"
+                        android:text="Add to Plan"
                         android:textSize="16sp"
                         app:iconGravity="textStart"
                         app:iconPadding="8dp"

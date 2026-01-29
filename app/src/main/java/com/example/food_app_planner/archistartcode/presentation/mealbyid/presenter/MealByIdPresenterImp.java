@@ -2,8 +2,10 @@ package com.example.food_app_planner.archistartcode.presentation.mealbyid.presen
 
 import android.content.Context;
 
+import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyidremote.MealByIdNetworkResponse;
+import com.example.food_app_planner.archistartcode.data.datasource.repositores.calendermealrepo.CalenderMealRepo;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.filtermealbyidrepo.MealByIdRepo;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.MealByIdView;
 
@@ -13,10 +15,12 @@ public class MealByIdPresenterImp implements MealByIdPresenter{
     private MealByIdView mealByIdView;
     private MealByIdRepo mealByIdRepo;
     private String id;
+    private CalenderMealRepo calenderMealRepo;
     public MealByIdPresenterImp(Context context,MealByIdView mealByIdView,String id){
         mealByIdRepo=new MealByIdRepo(context);
         this.mealByIdView=mealByIdView;
         this.id=id;
+        calenderMealRepo=new CalenderMealRepo(context);
     }
     @Override
     public void getMealById() {
@@ -32,6 +36,19 @@ public class MealByIdPresenterImp implements MealByIdPresenter{
             }
         });
 
+
+    }
+
+    @Override
+    public void insertProductToFav(MealById meal) {
+        mealByIdRepo.insertMealToFav(meal);
+
+
+    }
+
+    @Override
+    public void insertToCalender(CalenderMeal calenderMeal) {
+        calenderMealRepo.insertCalenderMeal(calenderMeal);
 
     }
 }

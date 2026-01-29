@@ -36,14 +36,12 @@
         android:name="com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.view.SpecificCategoryPageFragment"
         android:label="Category Details"
         tools:layout="@layout/fragment_specific_category_page" >
-        <!-- ✅ أضف الـ action ده -->
+
         <action
             android:id="@+id/action_specificCategoryPageFragment_to_mealByIdFragment"
             app:destination="@id/mealByIdFragment" />
 
     </fragment>
-
-    <!-- ✅ أضف الـ MealByIdFragment -->
     <fragment
         android:id="@+id/mealByIdFragment"
         android:name="com.example.food_app_planner.archistartcode.presentation.mealbyid.view.MealByIdFragment"
@@ -57,16 +55,16 @@
         tools:layout="@layout/fragment_search_icon" />
     <fragment
         android:id="@+id/plannerIconFragment"
-        android:name="com.example.food_app_planner.archistartcode.PlannerIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.calenderpage.view.PlannerIconFragment"
         android:label="fragment_planner_icon"
         tools:layout="@layout/fragment_planner_icon" />
     <fragment
         android:id="@+id/favouriteIconFragment"
-        android:name="com.example.food_app_planner.archistartcode.FavouriteIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.favouritemeals.view.FavouriteIconFragment"
         android:label="fragment_favourite_icon"
         tools:layout="@layout/fragment_favourite_icon" />
 
-    <!-- Country Page -->
+
     <fragment
         android:id="@+id/countrypage"
         android:name="com.example.food_app_planner.archistartcode.presentation.countrypage.view.CountryPageFragment"
@@ -86,5 +84,13 @@
         <action
             android:id="@+id/action_specificAreaFragment_to_mealByIdFragment"
             app:destination="@id/mealByIdFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signIn_Fragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.auth.view.SignIn_Fragment"
+        android:label="SignIn_Fragment" >
+        <action
+            android:id="@+id/action_signIn_Fragment_to_homeIconFragment"
+            app:destination="@id/homeIconFragment" />
     </fragment>
 </navigation>

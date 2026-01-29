@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.countries.Country;
 import com.example.food_app_planner.archistartcode.presentation.specificarea.view.OnClickAreaListener;
@@ -58,9 +60,11 @@ public class CountryPageAdapter extends RecyclerView.Adapter<CountryPageAdapter.
 
     class CountryVm extends RecyclerView.ViewHolder{
         private TextView areaname;
+        private ImageView imageView;
         public CountryVm(@NonNull View itemView) {
             super(itemView);
-            areaname=itemView.findViewById(R.id.areaname);
+            areaname=itemView.findViewById(R.id.mealname);
+            imageView=itemView.findViewById(R.id.areaflag);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,6 +78,8 @@ public class CountryPageAdapter extends RecyclerView.Adapter<CountryPageAdapter.
 
         }
         public void bind(Country country){
+            String url = "https://www.themealdb.com/images/icons/flags/big/64/" + country.getStrArea() + ".png";
+            Glide.with(itemView).load(url).into(imageView);
             areaname.setText(country.getStrArea());
         }
     }

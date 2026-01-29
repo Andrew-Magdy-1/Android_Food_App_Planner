@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_auth"
+    app:startDestination="@id/signInFragment">
+
+    <!-- Sign In Fragment -->
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.auth.view.SignIn_Fragment"
+        android:label="Sign In"
+        tools:layout="@layout/fragment_sign_in_">
+
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_homePage2"
+            app:destination="@id/homePage2" />
+
+    </fragment>
+
+    <!-- Sign Up Fragment -->
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.auth.view.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_sign_up">
+
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_homePage2"
+            app:destination="@id/homePage2" />
+
+    </fragment>
+    <activity
+        android:id="@+id/homePage2"
+        android:name="com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage"
+        android:label="activity_home_page"
+        tools:layout="@layout/activity_home_page" />
+
+    <!-- Home Page Activity -->
+
+</navigation>
