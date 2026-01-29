@@ -15,7 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.food_app_planner.R;
+import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseManager;
+import com.example.food_app_planner.archistartcode.database.calendermeal.CalenderMealDataBase;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenter;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenterImp;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -47,9 +49,7 @@ public class SignIn_Fragment extends Fragment implements AuthView {
         super.onCreate(savedInstanceState);
         firebaseManager = FirebaseManager.getInstance();
 
-        // Check if user is already logged in
         if (firebaseManager.isUserLoggedIn()) {
-          //  startMainActivity();
             return;
         }
         authPresenter = new AuthPresenterImp(this);
@@ -85,7 +85,6 @@ public class SignIn_Fragment extends Fragment implements AuthView {
         btnSignIn.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
-
             authPresenter.signInWithEmail(email, password);
         });
 
@@ -97,6 +96,12 @@ public class SignIn_Fragment extends Fragment implements AuthView {
                 showError("Google Sign-In not configured");
             }
         });
+
+        // أضف Guest button إذا موجود في الـ layout
+        View btnGuest = getView().findViewById(R.id.guestButton);
+        if (btnGuest != null) {
+            btnGuest.setOnClickListener(v -> authPresenter.signInAsGuest());
+        }
 
         goToSignUp.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_signInFragment_to_signUpFragment);
@@ -214,4 +219,7 @@ public class SignIn_Fragment extends Fragment implements AuthView {
             authPresenter.onDestroy();
         }
     }
+
+
+
 }

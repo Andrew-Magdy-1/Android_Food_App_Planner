@@ -75,6 +75,8 @@ public class PlannerAdapter extends RecyclerView.Adapter<PlannerAdapter.ViewHold
             del.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    onCalenderMealClickListener.delFromFire(calenderMeal.getIdMeal());
+                    onCalenderMealClickListener.onClickDel(calenderMeal);
 
                 }
             });

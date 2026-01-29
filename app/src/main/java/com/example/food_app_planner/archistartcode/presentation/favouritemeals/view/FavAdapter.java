@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
+import com.example.food_app_planner.archistartcode.presentation.favouritemeals.presenter.FavMealPresenter;
+import com.example.food_app_planner.archistartcode.presentation.favouritemeals.presenter.FavProdPresenterImp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +22,11 @@ import java.util.List;
 public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder> {
     private static OnFavClickListener onFavClickListener;
     private List<MealById> mealByIdList;
+    //private FavMealPresenter favMealPresenter;
     public FavAdapter(OnFavClickListener onFavClickListener){
         this.onFavClickListener=onFavClickListener;
         this.mealByIdList=new ArrayList<>();
+
     }
     public void setMealByIdList(List<MealById> mealByIdList){
         this.mealByIdList=mealByIdList;
@@ -70,7 +74,10 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder> {
                     .into(mealImage);
             strMeal.setText(mealById.getStrMeal());
             strDesc.setText(mealById.getStrCategory());
-            delBtn.setOnClickListener(view->onFavClickListener.onClickDel(mealById));
+            delBtn.setOnClickListener(view ->{
+                     onFavClickListener.onClickDel(mealById);
+                     onFavClickListener.delFromFire(mealById.getIdMeal());}
+            );
 
 
         }

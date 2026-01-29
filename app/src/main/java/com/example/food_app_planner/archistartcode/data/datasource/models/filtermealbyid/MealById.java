@@ -9,8 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 @Entity(tableName = "meals")
 public class MealById {
-    @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @ColumnInfo(name = "firestore_id")
+    private String firestoreId;
+    @ColumnInfo(name = "userId")
+    private String userId;
+    @ColumnInfo(name = "idMeal")
     private String idMeal;
     @ColumnInfo(name="strMeal")
     private String strMeal;
@@ -31,7 +36,7 @@ public class MealById {
         this.strIngredient7 = strIngredient7;
     }
 
-    public void setIdMeal(@NonNull String idMeal) {
+    public void setIdMeal(String idMeal) {
         this.idMeal = idMeal;
     }
 
@@ -73,6 +78,30 @@ public class MealById {
 
     public void setStrIngredient2(String strIngredient2) {
         this.strIngredient2 = strIngredient2;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setStrIngredient3(String strIngredient3) {

@@ -2,7 +2,6 @@ package com.example.food_app_planner.archistartcode.presentation.auth.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.food_app_planner.R;
+import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenter;
+import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenterImp;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -24,11 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 
-public class SignUpFragment extends Fragment {
+public class SignUpFragment extends Fragment implements AuthView {
 
     private static final String TAG = "SignUpFragment";
     private static final int RC_SIGN_IN = 1002;
@@ -40,14 +38,14 @@ public class SignUpFragment extends Fragment {
     private TextInputEditText etUsername, etEmail, etPassword;
     private TextInputLayout usernameLayout, emailLayout, passwordLayout;
 
-    // Firebase
-    private FirebaseAuth mAuth;
+    // Presenter
+    private AuthPresenter authPresenter;
     private GoogleSignInClient googleSignInClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
+        authPresenter = new AuthPresenterImp(this);
         configureGoogleSignIn();
     }
 
@@ -80,9 +78,17 @@ public class SignUpFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        btnSignUp.setOnClickListener(v -> createAccountWithEmail());
+        btnSignUp.setOnClickListener(v -> {
+            String username = etUsername.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+
+            authPresenter.signUpWithEmail(email, password, username);
+        });
+
         googleSignInButton.setOnClickListener(v -> signInWithGoogle());
-        btnGuest.setOnClickListener(v -> continueAsGuest());
+
+        btnGuest.setOnClickListener(v -> authPresenter.signInAsGuest());
 
         tvGoToSignIn.setOnClickListener(v -> {
             if (getActivity() != null) {
@@ -108,11 +114,12 @@ public class SignUpFragment extends Fragment {
 
     private void signInWithGoogle() {
         if (googleSignInClient == null) {
-            Toast.makeText(getContext(), "Google Sign-In not available", Toast.LENGTH_SHORT).show();
+            showError("Google Sign-In not available");
             return;
         }
 
         googleSignInButton.setEnabled(false);
+        showLoading();
 
         googleSignInClient.signOut().addOnCompleteListener(task -> {
             Intent signInIntent = googleSignInClient.getSignInIntent();
@@ -128,118 +135,54 @@ public class SignUpFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null && account.getIdToken() != null) {
-                    Log.d(TAG, "Google Sign-In: " + account.getEmail());
-                    firebaseAuthWithGoogle(account.getIdToken());
-                }
+                authPresenter.onGoogleSignInResult(account);
             } catch (ApiException e) {
                 Log.e(TAG, "Google Sign-In failed: " + e.getStatusCode());
-                Toast.makeText(getContext(), "Google sign in failed", Toast.LENGTH_SHORT).show();
-                googleSignInButton.setEnabled(true);
+                showError("Google sign in failed");
+                hideLoading();
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnSuccessListener(authResult -> {
-                    boolean isNewUser = authResult.getAdditionalUserInfo() != null &&
-                            authResult.getAdditionalUserInfo().isNewUser();
-
-                    String name = mAuth.getCurrentUser() != null &&
-                            mAuth.getCurrentUser().getDisplayName() != null
-                            ? mAuth.getCurrentUser().getDisplayName()
-                            : "User";
-
-                    if (isNewUser) {
-                        Log.d(TAG, "✅ New user created with Google");
-                        Toast.makeText(getContext(), "Welcome, " + name + "! Account created.", Toast.LENGTH_SHORT).show();
-                        navigateToHomePage();
-
-                    } else {
-                        // ❌ حساب قديم - في صفحة Sign Up
-                        Log.d(TAG, "❌ Account already exists");
-
-                        // اعمل Sign Out
-                        mAuth.signOut();
-                        googleSignInClient.signOut();
-
-                        // اعرض رسالة
-                        Toast.makeText(getContext(),
-                                "Account already exists! Please sign in instead.",
-                                Toast.LENGTH_LONG).show();
-
-                        // ارجع للشاشة السابقة (Sign In)
-                        if (getActivity() != null) {
-                            getActivity().onBackPressed();
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Firebase auth failed: " + e.getMessage());
-                    Toast.makeText(getContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-                    googleSignInButton.setEnabled(true);
-                });
+    // ========== AuthView Implementation ==========
+    @Override
+    public void showLoading() {
+        if (btnSignUp != null) {
+            btnSignUp.setEnabled(false);
+        }
+        if (googleSignInButton != null) {
+            googleSignInButton.setEnabled(false);
+        }
+        if (btnGuest != null) {
+            btnGuest.setEnabled(false);
+        }
     }
 
-
-    private void createAccountWithEmail() {
-        String username = etUsername.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-
-        // Validate
-        if (TextUtils.isEmpty(username)) {
-            usernameLayout.setError("Username required");
-            return;
+    @Override
+    public void hideLoading() {
+        if (btnSignUp != null) {
+            btnSignUp.setEnabled(true);
         }
-        if (TextUtils.isEmpty(email)) {
-            emailLayout.setError("Email required");
-            return;
+        if (googleSignInButton != null) {
+            googleSignInButton.setEnabled(true);
         }
-        if (TextUtils.isEmpty(password)) {
-            passwordLayout.setError("Password required");
-            return;
+        if (btnGuest != null) {
+            btnGuest.setEnabled(true);
         }
-
-        usernameLayout.setError(null);
-        emailLayout.setError(null);
-        passwordLayout.setError(null);
-        btnSignUp.setEnabled(false);
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-                    Log.d(TAG, "Account created: " + email);
-                    Toast.makeText(getContext(), "Welcome, " + username + "!", Toast.LENGTH_SHORT).show();
-                    navigateToHomePage();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Sign up failed: " + e.getMessage());
-                    Toast.makeText(getContext(), "Sign up failed", Toast.LENGTH_SHORT).show();
-                    btnSignUp.setEnabled(true);
-                });
     }
 
-
-    private void continueAsGuest() {
-        btnGuest.setEnabled(false);
-
-        mAuth.signInAnonymously()
-                .addOnSuccessListener(authResult -> {
-                    Log.d(TAG, "Guest sign in successful");
-                    Toast.makeText(getContext(), "Signed in as guest", Toast.LENGTH_SHORT).show();
-                    navigateToHomePage();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Guest sign in failed: " + e.getMessage());
-                    Toast.makeText(getContext(), "Guest login failed", Toast.LENGTH_SHORT).show();
-                    btnGuest.setEnabled(true);
-                });
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void showSuccess(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
-    private void navigateToHomePage() {
+    @Override
+    public void navigateToHomePage() {
         try {
             Intent intent = new Intent(requireActivity(),
                     com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage.class);
@@ -249,12 +192,47 @@ public class SignUpFragment extends Fragment {
             }
         } catch (Exception e) {
             Log.e(TAG, "Navigation failed: " + e.getMessage());
+            showError("Cannot navigate to home page");
+        }
+    }
+
+    @Override
+    public void navigateToSignUp() {
+        // Not needed here
+    }
+
+    @Override
+    public void setEmailError(String error) {
+        if (emailLayout != null) {
+            emailLayout.setError(error);
+        }
+    }
+
+    @Override
+    public void setPasswordError(String error) {
+        if (passwordLayout != null) {
+            passwordLayout.setError(error);
+        }
+    }
+
+    @Override
+    public void clearErrors() {
+        if (usernameLayout != null) {
+            usernameLayout.setError(null);
+        }
+        if (emailLayout != null) {
+            emailLayout.setError(null);
+        }
+        if (passwordLayout != null) {
+            passwordLayout.setError(null);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        googleSignInButton = null;
+        if (authPresenter != null) {
+            authPresenter.onDestroy();
+        }
     }
 }

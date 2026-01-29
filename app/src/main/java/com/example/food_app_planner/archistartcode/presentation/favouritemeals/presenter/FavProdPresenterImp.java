@@ -31,4 +31,17 @@ public class FavProdPresenterImp implements FavMealPresenter {
         mealLocalDataSource.deleteMeal(mealById);
 
     }
+
+    @Override
+    public void getFavouritsFromFav() {
+        meal.getFaovuristFire();
+    }
+
+    @Override
+    public void deleteFromFire(String id) {
+        meal.delFromFire(id);
+
+    }
+
+
 }

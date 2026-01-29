@@ -5,12 +5,14 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import com.example.food_app_planner.archistartcode.data.datasource.local.calendermeal.CalenderMealDataSource;
+import com.example.food_app_planner.archistartcode.data.datasource.local.mealtofavourite.MealLocalDataSource;
 import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 
 import java.util.List;
 
 public class CalenderMealRepo {
     private CalenderMealDataSource calenderMealDataSource;
+
     public CalenderMealRepo(Context context){
         calenderMealDataSource=new CalenderMealDataSource(context);
 
@@ -25,4 +27,12 @@ public class CalenderMealRepo {
     public void insertCalenderMeal(CalenderMeal calenderMeal){
         calenderMealDataSource.inserCalenderMeal(calenderMeal);
     }
+    public void getCalenderMealFomeremote(){
+        calenderMealDataSource.getCalenderMealFirestore();
+    }
+
+    public void removeCalenderMealFromFire(String id){
+        calenderMealDataSource.delFromFire(id);
+    }
+
 }

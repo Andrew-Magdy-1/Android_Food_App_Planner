@@ -9,6 +9,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
+import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
 
 import java.util.List;
 
@@ -19,8 +20,12 @@ public interface CalenderMealDAO {
     void insertMeal(CalenderMeal calenderMeal);
     @Query("SELECT * FROM calender_meal WHERE time BETWEEN :startDay AND :endDay")
     LiveData<List<CalenderMeal>> getCalenderMeals(long startDay, long endDay);
-    @Query("SELECT * FROM calender_meal WHERE userId = :userId AND timestamp BETWEEN :startDay AND :endDay ORDER BY timestamp DESC")
-    LiveData<List<CalenderMeal>> getCalenderMealsByUser(String userId, long startDay, long endDay);
     @Delete
     void delCalenderMeal(CalenderMeal calenderMeal);
+
+    @Query("DELETE FROM calender_meal")
+    void clearAll();
+
+    @Query("SELECT * FROM calender_meal WHERE idMeal = :mealId")
+    CalenderMeal getMealById(String mealId);
 }

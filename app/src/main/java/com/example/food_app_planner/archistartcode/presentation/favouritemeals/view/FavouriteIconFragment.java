@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
+import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseManager;
 import com.example.food_app_planner.archistartcode.presentation.favouritemeals.presenter.FavMealPresenter;
 import com.example.food_app_planner.archistartcode.presentation.favouritemeals.presenter.FavProdPresenterImp;
 
@@ -26,6 +27,7 @@ public class FavouriteIconFragment extends Fragment implements OnFavClickListene
     RecyclerView recyclerView;
     FavAdapter favAdapter;
     FavMealPresenter favMealPresenter;
+    FirebaseManager firebaseManager;
 
 
 
@@ -37,6 +39,8 @@ public class FavouriteIconFragment extends Fragment implements OnFavClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseManager=FirebaseManager.getInstance();
+
 
     }
 
@@ -50,11 +54,14 @@ public class FavouriteIconFragment extends Fragment implements OnFavClickListene
         recyclerView.setAdapter(favAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         favMealPresenter=new FavProdPresenterImp(getContext(),this);
+        favMealPresenter.getFavouritsFromFav();
+
         favMealPresenter.getFavMeals().observe(getViewLifecycleOwner(), new Observer<List<MealById>>() {
             @Override
             public void onChanged(List<MealById> mealByIdList) {
                 Log.d("FavFragment", "Data received: " + mealByIdList.size() + " items");
                 favAdapter.setMealByIdList(mealByIdList);
+
 
             }
         });
@@ -63,8 +70,14 @@ public class FavouriteIconFragment extends Fragment implements OnFavClickListene
 
     @Override
     public void onClickDel(MealById mealById) {
+        //firebaseManager.deleteFavoriteMealFromFirestore(mealById.getIdMeal());
         favMealPresenter.deleteMealFromFav(mealById);
 
+    }
+
+    @Override
+    public void delFromFire(String id) {
+        favMealPresenter.deleteFromFire(id);
     }
 
     @Override

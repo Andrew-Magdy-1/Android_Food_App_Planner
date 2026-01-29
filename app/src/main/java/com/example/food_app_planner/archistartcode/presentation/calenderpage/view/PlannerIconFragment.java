@@ -1,6 +1,11 @@
 package com.example.food_app_planner.archistartcode.presentation.calenderpage.view;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -9,11 +14,6 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CalendarView;
-
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.presentation.calenderpage.presenter.CalenderMealPresenter;
@@ -21,7 +21,6 @@ import com.example.food_app_planner.archistartcode.presentation.calenderpage.pre
 
 import java.util.Calendar;
 import java.util.List;
-
 
 public class PlannerIconFragment extends Fragment implements PlannerView,OnCalenderMealClickListener{
     private RecyclerView recyclerView;
@@ -33,6 +32,8 @@ public class PlannerIconFragment extends Fragment implements PlannerView,OnCalen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
     }
 
@@ -60,6 +61,7 @@ public class PlannerIconFragment extends Fragment implements PlannerView,OnCalen
         calendarView.setMinDate(minDate);
         calendarView.setMaxDate(maxDate);
         calendarView.setDate(minDate);
+//        calenderMealPresenter.getFromFireStore();
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -81,14 +83,26 @@ public class PlannerIconFragment extends Fragment implements PlannerView,OnCalen
         return v;
     }
 
+//    @Override
+//    public void onDelMeal(CalenderMeal calenderMeal) {
+//        calenderMealPresenter.delCalenderMeal(calenderMeal);
+//
+//    }
+
     @Override
-    public void onDelMeal(CalenderMeal calenderMeal) {
+    public void onSuccess(LiveData<List<CalenderMeal>> calenderMeals) {
+
+    }
+
+    @Override
+    public void onClickDel(CalenderMeal calenderMeal) {
         calenderMealPresenter.delCalenderMeal(calenderMeal);
 
     }
 
     @Override
-    public void onSuccess(LiveData<List<CalenderMeal>> calenderMeals) {
+    public void delFromFire(String id) {
+        calenderMealPresenter.getFromFireStore(id);
 
     }
 }
