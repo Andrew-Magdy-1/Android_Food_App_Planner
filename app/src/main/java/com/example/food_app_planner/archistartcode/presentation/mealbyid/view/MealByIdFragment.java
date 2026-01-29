@@ -1,5 +1,7 @@
 package com.example.food_app_planner.archistartcode.presentation.mealbyid.view;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,21 +13,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.food_app_planner.R;
+import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.presenter.MealByIdPresenter;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.presenter.MealByIdPresenterImp;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
+import java.util.Calendar;
 import java.util.List;
 
-public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMealListener {
+public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMealListener,MealOnClickLIistener {
     private String id;
     private RecyclerView recyclerView;
     private MealByIdPresenter mealByIdPresenter;
@@ -35,6 +42,9 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
     private TextView mealDesc;
     private TextView mealCat;
     private YouTubePlayerView youtubePlayerView;
+    private FloatingActionButton favBtn;
+    private MealOnClickLIistener mealOnClickLIistener;
+    private Button addToPlan;
 
     public MealByIdFragment() {
         // Required empty public constructor
@@ -55,9 +65,11 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
         mealCat=v.findViewById(R.id.catName);
         mealDesc=v.findViewById(R.id.tvDescription);
         youtubePlayerView= v.findViewById(R.id.youtubePlayerView);
+        addToPlan=v.findViewById(R.id.btnAddToPlan);
+        favBtn=v.findViewById(R.id.fabFavorite);
         id = getArguments().getString("Meal_id");
         mealByIdPresenter=new MealByIdPresenterImp(getContext(),this,id);
-        mealByIdAdapter=new MealByIdAdapter();
+        mealByIdAdapter=new MealByIdAdapter(this);
         recyclerView.setAdapter(mealByIdAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 getContext(),
@@ -65,12 +77,17 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
                 false
         ));
 
+
+
+
         mealByIdPresenter.getMealById();
 
         return v;
     }
     @Override
     public void onSuccess(MealById mealByIdList) {
+
+
         Glide.with(MealByIdFragment.this).load(mealByIdList.getStrMealThumb()).into(mealImage);
         mealTitle.setText(mealByIdList.getStrMeal());
         mealCat.setText(mealByIdList.getStrCategory());
@@ -78,7 +95,58 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
         mealByIdAdapter.setLists(mealByIdList);
         setupYouTubePlayer(mealByIdList.getStrYoutube());
 
+        favBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mealOnClickLIistener != null) {
+                    mealOnClickLIistener.addMealToFav(mealByIdList);
+                    Toast.makeText(getContext(), "Added to favorites!", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        });
+        addToPlan.setOnClickListener(v -> {
+
+            Calendar calendar = Calendar.getInstance();
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    requireContext(),
+                    (view, year, month, dayOfMonth) -> {
+
+                        Calendar selectedCal = Calendar.getInstance();
+                        selectedCal.set(year, month, dayOfMonth, 0, 0, 0);
+
+                        CalenderMeal calenderMeal = new CalenderMeal();
+                        calenderMeal.setIdMeal(mealByIdList.getIdMeal());
+                        calenderMeal.setStrMeal(mealByIdList.getStrMeal());
+                        calenderMeal.setStrMealThumb(mealByIdList.getStrMealThumb());
+                        calenderMeal.setStrArea(mealByIdList.getStrArea());
+                        calenderMeal.setStrCategory(mealByIdList.getStrCategory());
+                        calenderMeal.setTimestamp(selectedCal.getTimeInMillis());
+
+                        mealOnClickLIistener.addMealToPlan(calenderMeal);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+            datePickerDialog.show();
+        });
+
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof MealOnClickLIistener) {
+            mealOnClickLIistener = (MealOnClickLIistener) context;
+        } else {
+            mealOnClickLIistener = this;
+        }
+    }
+
     private void setupYouTubePlayer(String youtubeUrl) {
         if (youtubeUrl == null || youtubeUrl.isEmpty()) {
             youtubePlayerView.setVisibility(View.GONE);
@@ -115,5 +183,19 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
     public void onClickMeal(String id) {
         this.id=id;
 
+    }
+
+
+    @Override
+    public void addMealToFav(MealById meal) {
+        mealByIdPresenter.insertProductToFav(meal);
+        //Toast.makeText(getContext(), "Added to favorites!", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void addMealToPlan(CalenderMeal calenderMeal) {
+        mealByIdPresenter.insertToCalender(calenderMeal);
+        Toast.makeText(getContext(), "Added to plan!", Toast.LENGTH_SHORT).show();
     }
 }

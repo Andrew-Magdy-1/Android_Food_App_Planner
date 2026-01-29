@@ -16,25 +16,18 @@ import java.util.List;
 
 public class MealByIdAdapter extends RecyclerView.Adapter<MealByIdAdapter.MealVh> {
 
-    // ✅ احذف mealByIdList - مش محتاجينها
     private List<String> ingredientsList = new ArrayList<>();
     private List<String> measureList = new ArrayList<>();
-
-    public MealByIdAdapter() {
+    private MealOnClickLIistener mealOnClickLIistener;
+    public MealByIdAdapter( MealOnClickLIistener mealOnClickLIistener) {
+        this.mealOnClickLIistener=mealOnClickLIistener;
     }
 
-    // ✅ عدّل الـ method
+
     public void setLists(MealById mealById) {
         this.ingredientsList = mealById.getAllIngredients();
         this.measureList = mealById.getAllMeasures();
 
-        Log.d("MealByIdAdapter", "setLists called");
-        Log.d("MealByIdAdapter", "Ingredients: " + ingredientsList.size());
-        Log.d("MealByIdAdapter", "Measures: " + measureList.size());
-
-        if (ingredientsList.size() > 0) {
-            Log.d("MealByIdAdapter", "First ingredient: " + ingredientsList.get(0));
-        }
 
         notifyDataSetChanged();
     }
@@ -53,15 +46,11 @@ public class MealByIdAdapter extends RecyclerView.Adapter<MealByIdAdapter.MealVh
         String ingredient = ingredientsList.get(position);
         String measure = measureList.get(position);
 
-        Log.d("MealByIdAdapter", "onBindViewHolder - Position: " + position);
-        Log.d("MealByIdAdapter", "Binding: " + ingredient + " - " + measure);
-
         holder.bind(ingredient, measure);
     }
 
     @Override
     public int getItemCount() {
-        // ✅ هنا المشكلة - كان بيرجع mealByIdList.size() اللي كانت فاضية!
         int count = ingredientsList.size();
         Log.d("MealByIdAdapter", "getItemCount: " + count);
         return count;
@@ -80,17 +69,13 @@ public class MealByIdAdapter extends RecyclerView.Adapter<MealByIdAdapter.MealVh
         }
 
         void bind(String ingredient, String measure) {
-            // ✅ أضف .png في آخر الـ URL
             String url = "https://www.themealdb.com/images/ingredients/" + ingredient + ".png";
-
             Log.d("MealByIdAdapter", "Loading image: " + url);
-
             Glide.with(itemView.getContext())
                     .load(url)
                     .placeholder(R.drawable.logo)
                     .error(R.drawable.logo)
                     .into(ingimg);
-
             ingName.setText(ingredient);
             ingInst.setText(measure);
         }

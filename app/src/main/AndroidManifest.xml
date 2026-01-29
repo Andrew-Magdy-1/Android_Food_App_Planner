@@ -22,7 +22,7 @@
         <!-- android:name=".AuthActivity" -->
         <!-- android:exported="false" /> -->
         <activity
-            android:name=".archistartcode.AuthActivity"
+            android:name=".archistartcode.presentation.auth.view.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
