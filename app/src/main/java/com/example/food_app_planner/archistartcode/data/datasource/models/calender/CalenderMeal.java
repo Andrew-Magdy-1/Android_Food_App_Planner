@@ -3,36 +3,20 @@ package com.example.food_app_planner.archistartcode.data.datasource.models.calen
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "calender_meal")
+@Entity(
+        tableName = "calender_meal",
+        indices = {@Index(value = {"firestore_id"}, unique = true)}
+)
 public class CalenderMeal {
     @PrimaryKey(autoGenerate = true)
     private int id;
-
-
     @ColumnInfo(name = "firestore_id")
     private String firestoreId;
-
     @ColumnInfo(name = "userId")
     private String userId;
-
-    public String getFirestoreId() {
-        return firestoreId;
-    }
-
-    public void setFirestoreId(String firestoreId) {
-        this.firestoreId = firestoreId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     @ColumnInfo(name="idMeal")
     private String idMeal;
     @ColumnInfo(name="strMeal")
@@ -45,6 +29,27 @@ public class CalenderMeal {
     private String strMealThumb;
     @ColumnInfo(name="time")
     private long timestamp;
+
+
+    public String getFirestoreId() {
+        return firestoreId;
+    }
+    public CalenderMeal() {
+
+    }
+
+
+    public void setFirestoreId(String firestoreId) {
+        this.firestoreId = firestoreId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public int getId() {
         return id;

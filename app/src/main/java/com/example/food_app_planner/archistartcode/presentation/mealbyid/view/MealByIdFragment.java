@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
+import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseManager;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.presenter.MealByIdPresenter;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.presenter.MealByIdPresenterImp;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -86,20 +87,22 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
     }
     @Override
     public void onSuccess(MealById mealByIdList) {
-
-
         Glide.with(MealByIdFragment.this).load(mealByIdList.getStrMealThumb()).into(mealImage);
         mealTitle.setText(mealByIdList.getStrMeal());
         mealCat.setText(mealByIdList.getStrCategory());
         mealDesc.setText(mealByIdList.getStrInstructions());
         mealByIdAdapter.setLists(mealByIdList);
         setupYouTubePlayer(mealByIdList.getStrYoutube());
-
         favBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mealOnClickLIistener != null) {
-                    mealOnClickLIistener.addMealToFav(mealByIdList);
+                    String userId = FirebaseManager.getInstance().getCurrentUserId();
+                    if (userId != null) {
+                        mealByIdList.setUserId(userId);
+                    }
+                   mealByIdPresenter.insertProductToFav(mealByIdList);
+                   // mealOnClickLIistener.addMealToFav(mealByIdList);
                     Toast.makeText(getContext(), "Added to favorites!", Toast.LENGTH_SHORT).show();
 
                 }
@@ -125,7 +128,9 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
                         calenderMeal.setStrCategory(mealByIdList.getStrCategory());
                         calenderMeal.setTimestamp(selectedCal.getTimeInMillis());
 
-                        mealOnClickLIistener.addMealToPlan(calenderMeal);
+                        //mealOnClickLIistener.addMealToPlan(calenderMeal);
+                        mealByIdPresenter.insertToCalender(calenderMeal);
+                        Toast.makeText(getContext(), "Added to plan!", Toast.LENGTH_SHORT).show();
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
@@ -188,14 +193,14 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
 
     @Override
     public void addMealToFav(MealById meal) {
-        mealByIdPresenter.insertProductToFav(meal);
+       // mealByIdPresenter.insertProductToFav(meal);
         //Toast.makeText(getContext(), "Added to favorites!", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void addMealToPlan(CalenderMeal calenderMeal) {
-        mealByIdPresenter.insertToCalender(calenderMeal);
-        Toast.makeText(getContext(), "Added to plan!", Toast.LENGTH_SHORT).show();
+       // mealByIdPresenter.insertToCalender(calenderMeal);
+        //Toast.makeText(getContext(), "Added to plan!", Toast.LENGTH_SHORT).show();
     }
 }

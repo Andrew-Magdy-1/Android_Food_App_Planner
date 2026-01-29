@@ -4,4 +4,5 @@ import com.example.food_app_planner.archistartcode.data.datasource.models.filter
 
 public interface OnFavClickListener {
     void onClickDel(MealById mealById);
+    void delFromFire(String id);
 }

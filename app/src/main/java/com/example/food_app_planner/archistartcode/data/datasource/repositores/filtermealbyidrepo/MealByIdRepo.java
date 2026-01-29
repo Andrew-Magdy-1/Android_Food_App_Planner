@@ -28,4 +28,10 @@ public class MealByIdRepo {
 
         mealLocalDataSource.insertMeal(meal);
     }
+    public void getFaovuristFire(){
+        mealLocalDataSource.getFavoritesFirestore();
+    }
+    public void delFromFire(String id) {
+        mealLocalDataSource.removeFromFire(id);
+    }
 }

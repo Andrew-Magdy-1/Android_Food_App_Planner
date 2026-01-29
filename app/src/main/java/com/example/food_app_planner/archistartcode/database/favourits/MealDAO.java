@@ -20,6 +20,8 @@ public interface MealDAO {
 
     @Delete
     void deletMeal(MealById meal);
+    @Query("SELECT * FROM meals WHERE idMeal = :mealId")
+    MealById getMealById(String mealId);
 
 
 

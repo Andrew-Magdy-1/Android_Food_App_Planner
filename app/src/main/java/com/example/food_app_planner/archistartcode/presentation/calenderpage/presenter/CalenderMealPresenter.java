@@ -9,5 +9,5 @@ import java.util.List;
 public interface CalenderMealPresenter {
     LiveData<List<CalenderMeal>> getCalenderMealPresenetr(long start,long end);
     void delCalenderMeal(CalenderMeal calenderMeal);
-
+    void getFromFireStore(String id);
 }
