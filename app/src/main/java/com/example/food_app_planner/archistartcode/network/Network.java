@@ -5,6 +5,8 @@ import com.example.food_app_planner.archistartcode.data.datasource.remote.countr
 import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyarearemote.FilterAreaService;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbycategory.FilterByCategoryService;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyidremote.MealByIdService;
+import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyingrediant.FilterByIngredientService;
+import com.example.food_app_planner.archistartcode.data.datasource.remote.ingrediantremote.IngredientService;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.randommealremote.RandomMealService;
 
 import retrofit2.Retrofit;
@@ -15,8 +17,10 @@ public class Network {
     public CategoryServic categoryServic;
     public CountryService countryService;
     public FilterAreaService filterAreaService;
+    public IngredientService ingredientService;
     public FilterByCategoryService filterByCategoryService;
     public MealByIdService mealByIdService;
+    public FilterByIngredientService filterByIngredientService;
     public static Network instanse=null;
     public Network(){
         Retrofit retrofit=new Retrofit.Builder()
@@ -29,6 +33,9 @@ public class Network {
         filterAreaService=retrofit.create(FilterAreaService.class);
         filterByCategoryService=retrofit.create(FilterByCategoryService.class);
         mealByIdService=retrofit.create(MealByIdService.class);
+        ingredientService=retrofit.create(IngredientService.class);
+        filterByIngredientService=retrofit.create(FilterByIngredientService.class);
+
     }
     public static Network getInstance(){
         if(instanse==null)instanse=new Network();

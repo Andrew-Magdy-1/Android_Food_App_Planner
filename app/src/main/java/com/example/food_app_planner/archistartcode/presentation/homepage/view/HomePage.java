@@ -1,6 +1,8 @@
 package com.example.food_app_planner.archistartcode.presentation.homepage.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,7 @@ import java.util.List;
 
 public class HomePage extends AppCompatActivity {
     HomePageFragment homePageFragment;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,11 @@ public class HomePage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+
+        textView=findViewById(R.id.userName);
+        Intent intent = getIntent();
+
+        textView.setText(intent.getStringExtra("user_name"));
 
         NavHostFragment navHostFragment =
                 (NavHostFragment) getSupportFragmentManager()

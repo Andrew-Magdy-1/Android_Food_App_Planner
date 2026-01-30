@@ -50,7 +50,7 @@
 
     <fragment
         android:id="@+id/searchIconFragment"
-        android:name="com.example.food_app_planner.archistartcode.SearchIconFragment"
+        android:name="com.example.food_app_planner.archistartcode.presentation.search.view.SearchIconFragment"
         android:label="fragment_search_icon"
         tools:layout="@layout/fragment_search_icon" />
     <fragment

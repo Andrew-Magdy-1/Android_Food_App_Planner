@@ -7,6 +7,7 @@ import android.util.Patterns;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseManager;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseNetworkResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseRemoteDataSource;
+import com.example.food_app_planner.archistartcode.data.datasource.repositores.firbaserepo.FirebaseRepo;
 import com.example.food_app_planner.archistartcode.presentation.auth.view.AuthView;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,11 +18,13 @@ public class AuthPresenterImp implements AuthPresenter {
     private AuthView view;
     private final FirebaseRemoteDataSource firebaseDataSource;
     private final FirebaseManager firebaseManager;
+    private FirebaseRepo firebaseRepo;
 
     public AuthPresenterImp(AuthView view) {
         this.view = view;
         this.firebaseDataSource = FirebaseRemoteDataSource.getInstance();
         this.firebaseManager = FirebaseManager.getInstance();
+        firebaseRepo=new FirebaseRepo();
     }
 
     @Override
@@ -29,79 +32,60 @@ public class AuthPresenterImp implements AuthPresenter {
         if (!validateEmailPassword(email, password)) {
             return;
         }
-
         view.clearErrors();
         view.showLoading();
-
-        firebaseDataSource.signInWithEmail(email, password, new FirebaseNetworkResponse() {
+        firebaseRepo.signInWithEmail(email, password, new FirebaseRepo.AuthCallback() {
             @Override
-            public void onSuccess(FirebaseUser user) {
+            public void onSuccess(String message) {
                 if (view != null) {
                     view.hideLoading();
-
-                    // ✅ Create/Update user document
-//                    firebaseManager.createUserDocument(
-//                            user.getUid(),
-//                            user.getEmail(),
-//                            user.getDisplayName() != null ? user.getDisplayName() : "User",
-//                            "email"
-//                    );
-//
-//                    // ✅ Update last login
-//                    firebaseManager.updateUserLastLogin(user.getUid());
-
-                    view.showSuccess("Welcome back!");
-                    view.navigateToHomePage();
+                    view.showSuccess(message);
+                    view.navigateToHomePage(message);
                 }
+
             }
 
             @Override
-            public void onFailure(String errorMessage) {
+            public void onFailure(String error) {
+
                 if (view != null) {
                     view.hideLoading();
-                    view.showError(errorMessage);
+                    view.showError(error);
                 }
+
             }
         });
+
+
     }
 
     @Override
     public void signUpWithEmail(String email, String password, String username) {
-        if (!validateSignUp(email, password, username)) {
-            return;
-        }
+        if (!validateSignUp(email, password, username)) return;
 
         view.clearErrors();
         view.showLoading();
 
-        firebaseDataSource.signUpWithEmail(email, password, new FirebaseNetworkResponse() {
+        firebaseRepo.signUpWithEmail(email, password, username, new FirebaseRepo.AuthCallback() {
             @Override
-            public void onSuccess(FirebaseUser user) {
+            public void onSuccess(String message) {
                 if (view != null) {
                     view.hideLoading();
-
-//                    // ✅ Create user document with username
-//                    firebaseManager.createUserDocument(
-//                            user.getUid(),
-//                            email,
-//                            username,
-//                            "email"
-//                    );
-
-                    view.showSuccess("Account created successfully!");
-                    view.navigateToHomePage();
+                    view.showSuccess(message);
+                    view.navigateToHomePage(username);
                 }
             }
 
             @Override
-            public void onFailure(String errorMessage) {
+            public void onFailure(String error) {
                 if (view != null) {
                     view.hideLoading();
-                    view.showError(errorMessage);
+                    view.showError(error);
                 }
             }
         });
     }
+
 
     @Override
     public void signInWithGoogle(String idToken) {
@@ -117,7 +101,26 @@ public class AuthPresenterImp implements AuthPresenter {
         }
 
         String idToken = account.getIdToken();
-        view.showLoading();
+//        view.showLoading();
+//        firebaseRepo.signInWithGoogle(idToken, new FirebaseRepo.AuthCallback() {
+//            @Override
+//            public void onSuccess(String message) {
+//                if (view != null) {
+//                    view.hideLoading();
+//
+//                 //   String name = user.getDisplayName() != null ? user.getDisplayName() : "User";
+//                    view.showSuccess("Welcome, " + name + "!");
+//                    view.navigateToHomePage(user.getDisplayName());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String error) {
+//
+//            }
+//        });
+//
 
         firebaseDataSource.signInWithGoogle(idToken, new FirebaseNetworkResponse() {
             @Override
@@ -125,20 +128,9 @@ public class AuthPresenterImp implements AuthPresenter {
                 if (view != null) {
                     view.hideLoading();
 
-                    // ✅ Create/Update user document
-//                    firebaseManager.createUserDocument(
-//                            user.getUid(),
-//                            user.getEmail(),
-//                            user.getDisplayName() != null ? user.getDisplayName() : "User",
-//                            "google"
-//                    );
-
-                    // ✅ Update last login
-                    //firebaseManager.updateUserLastLogin(user.getUid());
-
                     String name = user.getDisplayName() != null ? user.getDisplayName() : "User";
                     view.showSuccess("Welcome, " + name + "!");
-                    view.navigateToHomePage();
+                    view.navigateToHomePage(user.getDisplayName());
                 }
             }
 
@@ -162,16 +154,8 @@ public class AuthPresenterImp implements AuthPresenter {
                 if (view != null) {
                     view.hideLoading();
 
-//                    // ✅ Create guest user document
-//                    firebaseManager.createUserDocument(
-//                            user.getUid(),
-//                            "guest@temp.com",
-//                            "Guest User",
-//                            "guest"
-//                    );
-
                     view.showSuccess("Signed in as guest");
-                    view.navigateToHomePage();
+                    view.navigateToHomePage(user.getDisplayName());
                 }
             }
 
