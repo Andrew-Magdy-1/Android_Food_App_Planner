@@ -2,11 +2,7 @@ package com.example.food_app_planner.archistartcode.data.datasource.remote.fireb
 
 import android.util.Log;
 
-import com.example.food_app_planner.archistartcode.network.Network;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -32,8 +28,9 @@ public class FirebaseRemoteDataSource {
                     if (task.isSuccessful()) {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (user != null) {
-                            Log.d(TAG, "Sign in successful: " + user.getEmail());
-                            response.onSuccess(user);
+                            user.reload().addOnCompleteListener(reloadTask -> {
+                                response.onSuccess(firebaseAuth.getCurrentUser());
+                            });
                         } else {
                             response.onFailure("User not found");
                         }
@@ -44,14 +41,24 @@ public class FirebaseRemoteDataSource {
                 });
     }
 
-    public void signUpWithEmail(String email, String password, FirebaseNetworkResponse response) {
+    public void signUpWithEmail(String email, String password, String username, FirebaseNetworkResponse response) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (user != null) {
-                            Log.d(TAG, "Sign up successful: " + user.getEmail());
-                            response.onSuccess(user);
+                            user.updateProfile(new com.google.firebase.auth.UserProfileChangeRequest.Builder()
+                                            .setDisplayName(username)
+                                            .build())
+                                    .addOnCompleteListener(profileUpdateTask -> {
+                                        if (profileUpdateTask.isSuccessful()) {
+                                            Log.d(TAG, "Sign up successful: " + user.getEmail() + " " + user.getDisplayName());
+                                            response.onSuccess(user);
+                                        } else {
+                                            Log.e(TAG, "Failed to set display name");
+                                            response.onFailure("Failed to set display name");
+                                        }
+                                    });
                         } else {
                             response.onFailure("User creation failed");
                         }
@@ -61,6 +68,7 @@ public class FirebaseRemoteDataSource {
                     }
                 });
     }
+
 
     public void signInWithGoogle(String idToken, FirebaseNetworkResponse response) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
@@ -111,21 +119,20 @@ public class FirebaseRemoteDataSource {
     public FirebaseUser getCurrentUser() {
         return firebaseAuth.getCurrentUser();
     }
+    public String getCurrentUserName() {
+        return firebaseAuth.getCurrentUser().getDisplayName();
+    }
 
     public void checkIfUserIsNew(FirebaseUser user, UserCheckCallback callback) {
-        // In Firebase, we can check additional user info
-        // This is a simplified version
+
         user.reload().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Check if user metadata indicates new user
-                // This logic might need adjustment based on your needs
                 long creationTime = user.getMetadata().getCreationTimestamp();
                 long lastSignInTime = user.getMetadata().getLastSignInTimestamp();
 
                 boolean isNewUser = (creationTime == lastSignInTime);
                 callback.onResult(isNewUser);
             } else {
-                // Default to assuming it's an existing user
                 callback.onResult(false);
             }
         });

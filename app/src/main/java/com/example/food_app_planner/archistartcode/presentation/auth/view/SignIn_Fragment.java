@@ -20,6 +20,7 @@ import com.example.food_app_planner.archistartcode.data.datasource.remote.fireba
 import com.example.food_app_planner.archistartcode.database.calendermeal.CalenderMealDataBase;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenter;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenterImp;
+import com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -67,7 +68,6 @@ public class SignIn_Fragment extends Fragment implements AuthView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Setup click listeners
         setupClickListeners();
     }
 
@@ -96,8 +96,6 @@ public class SignIn_Fragment extends Fragment implements AuthView {
                 showError("Google Sign-In not configured");
             }
         });
-
-        // أضف Guest button إذا موجود في الـ layout
         View btnGuest = getView().findViewById(R.id.guestButton);
         if (btnGuest != null) {
             btnGuest.setOnClickListener(v -> authPresenter.signInAsGuest());
@@ -131,7 +129,6 @@ public class SignIn_Fragment extends Fragment implements AuthView {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                // إرسال الـ account إلى الـ Presenter
                 authPresenter.onGoogleSignInResult(account);
             } catch (ApiException e) {
                 Log.e(TAG, "Google Sign-In failed: " + e.getStatusCode());
@@ -164,14 +161,16 @@ public class SignIn_Fragment extends Fragment implements AuthView {
 
     @Override
     public void showSuccess(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void navigateToHomePage() {
+    public void navigateToHomePage(String name) {
         try {
             Intent intent = new Intent(requireActivity(),
-                    com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage.class);
+                    HomePage.class);
+            Toast.makeText(getContext(),"Welcome, "+ name, Toast.LENGTH_SHORT).show();
+            intent.putExtra("user_name", name);
             startActivity(intent);
             if (getActivity() != null) {
                 getActivity().finish();
@@ -184,7 +183,7 @@ public class SignIn_Fragment extends Fragment implements AuthView {
 
     @Override
     public void navigateToSignUp() {
-        // Not needed here - handled by XML navigation
+
     }
 
     @Override
@@ -214,7 +213,6 @@ public class SignIn_Fragment extends Fragment implements AuthView {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Clean up presenter
         if (authPresenter != null) {
             authPresenter.onDestroy();
         }

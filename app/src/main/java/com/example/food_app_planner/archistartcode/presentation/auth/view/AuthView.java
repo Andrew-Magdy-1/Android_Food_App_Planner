@@ -5,7 +5,7 @@ public interface AuthView {
     void hideLoading();
     void showError(String message);
     void showSuccess(String message);
-    void navigateToHomePage();
+    void navigateToHomePage(String name);
     void navigateToSignUp();
     void setEmailError(String error);
     void setPasswordError(String error);

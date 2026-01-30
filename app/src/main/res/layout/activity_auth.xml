@@ -8,9 +8,6 @@
     android:background="@color/white"
     tools:context=".archistartcode.presentation.auth.view.AuthActivity">
 
-    <!-- مسح كل FragmentContainerView السابقة -->
-    <!-- واترك NavHost فقط -->
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

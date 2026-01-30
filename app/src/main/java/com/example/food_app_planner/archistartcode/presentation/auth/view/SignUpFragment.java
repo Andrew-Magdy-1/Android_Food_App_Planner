@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenter;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenterImp;
+import com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -84,6 +85,7 @@ public class SignUpFragment extends Fragment implements AuthView {
             String password = etPassword.getText().toString().trim();
 
             authPresenter.signUpWithEmail(email, password, username);
+
         });
 
         googleSignInButton.setOnClickListener(v -> signInWithGoogle());
@@ -143,8 +145,6 @@ public class SignUpFragment extends Fragment implements AuthView {
             }
         }
     }
-
-    // ========== AuthView Implementation ==========
     @Override
     public void showLoading() {
         if (btnSignUp != null) {
@@ -182,10 +182,12 @@ public class SignUpFragment extends Fragment implements AuthView {
     }
 
     @Override
-    public void navigateToHomePage() {
+    public void navigateToHomePage(String name) {
         try {
             Intent intent = new Intent(requireActivity(),
-                    com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage.class);
+                    HomePage.class);
+
+            intent.putExtra("user_name", name);
             startActivity(intent);
             if (getActivity() != null) {
                 getActivity().finish();

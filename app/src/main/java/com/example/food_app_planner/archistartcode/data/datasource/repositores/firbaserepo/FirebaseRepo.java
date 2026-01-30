@@ -27,14 +27,19 @@ public class FirebaseRepo {
         firebaseRemoteDataSource.signInWithEmail(email, password, new FirebaseNetworkResponse() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                String name = user.getDisplayName() != null ? user.getDisplayName() : "User";
+                //String name = user.getDisplayName() != null ? user.getDisplayName() : "User";
 
 
 
                 // Sync data from Firestore
                 syncUserDataAfterLogin(user.getUid());
+                String name = user.getDisplayName();
+                    if (name == null || name.isEmpty()) {
+                        name = user.getEmail().split("@")[0];
+                    }
 
-                callback.onSuccess("Welcome, " + name + "!");
+                //callback.onSuccess("Welcome, " + name + "!");
+                callback.onSuccess(name);
             }
 
             @Override
@@ -43,44 +48,18 @@ public class FirebaseRepo {
             }
         });
     }
-
-    public void signUpWithEmail(String email, String password, AuthCallback callback) {
-        firebaseRemoteDataSource.signUpWithEmail(email, password, new FirebaseNetworkResponse() {
-            @Override
-            public void onSuccess(FirebaseUser user) {
-                // Create user document in Firestore
-                String userId = user.getUid();
-                String userName = user.getDisplayName() != null ? user.getDisplayName() : "User";
-
-
-                callback.onSuccess("Account created successfully!");
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                callback.onFailure(errorMessage);
-            }
-        });
+    public String getCurrentUserName() {
+        return firebaseRemoteDataSource.getCurrentUserName();
     }
-
-    public void signUpWithEmailAndName(String email, String password, String username, AuthCallback callback) {
-        firebaseRemoteDataSource.signUpWithEmail(email, password, new FirebaseNetworkResponse() {
+    public void signUpWithEmail(String email, String password, String username, AuthCallback callback) {
+        firebaseRemoteDataSource.signUpWithEmail(email, password, username, new FirebaseNetworkResponse() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                // Update user profile with name
-                user.updateProfile(new com.google.firebase.auth.UserProfileChangeRequest.Builder()
-                                .setDisplayName(username)
-                                .build())
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                // Create user document in Firestore
-                                String userId = user.getUid();
-
-                                callback.onSuccess("Account created successfully!");
-                            } else {
-                                callback.onFailure("Failed to update profile");
-                            }
-                        });
+                if (user != null) {
+                    callback.onSuccess("Account created successfully! Welcome, " + username);
+                } else {
+                    callback.onFailure("User creation failed");
+                }
             }
 
             @Override
@@ -128,9 +107,6 @@ public class FirebaseRepo {
             @Override
             public void onSuccess(FirebaseUser user) {
                 String userId = user.getUid();
-
-                // Create guest user document
-
                 callback.onSuccess("Signed in as guest");
             }
 
