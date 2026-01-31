@@ -3,60 +3,48 @@ package com.example.food_app_planner.archistartcode.presentation.homepage.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
-import com.airbnb.lottie.LottieAnimationView;
+
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.database.calendermeal.CalenderMealDataBase;
 import com.example.food_app_planner.archistartcode.database.favourits.AddMealToDb;
 import com.example.food_app_planner.archistartcode.network.offlineconnection.NetworkMonitor;
 import com.example.food_app_planner.archistartcode.presentation.auth.view.AuthActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomePage extends AppCompatActivity {
     private TextView textView;
-    private BottomNavigationView bottomNav;
+    private ImageButton logoutButton;
     private NetworkMonitor networkMonitor;
-    private ConstraintLayout contentContainer;
-    private ConstraintLayout noInternetView;
-    private LottieAnimationView lottieAnimationView;
-    private MaterialButton btnRetry;
+    private ConstraintLayout noInternetLayout;
+    private View homeFragmentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
-        bottomNav = findViewById(R.id.bottomNav);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
         textView = findViewById(R.id.userName);
-        contentContainer = findViewById(R.id.contentContainer);
-        noInternetView = findViewById(R.id.noInternetView);
-        lottieAnimationView = findViewById(R.id.lottieAnimationView);
-        btnRetry = findViewById(R.id.btnRetry);
+        logoutButton = findViewById(R.id.logoutButton);
+        noInternetLayout = findViewById(R.id.noInternetLayout);
+        homeFragmentContainer = findViewById(R.id.homeFragmentContainer);
+
         Intent intent = getIntent();
-        String userName = intent.getStringExtra("user_name");
-        if (userName != null) {
-            textView.setText(userName);
-        }
-        setupNavigation();
+        textView.setText(intent.getStringExtra("user_name") + " \uD83D\uDE0A");
 
-
-        btnRetry.setOnClickListener(v -> checkNetworkAndUpdateUI());
-
-
-        initializeNetworkMonitor();
-    }
-
-    private void setupNavigation() {
         NavHostFragment navHostFragment =
                 (NavHostFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.homeFragmentContainer);
@@ -65,6 +53,7 @@ public class HomePage extends AppCompatActivity {
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+
             if (id == R.id.favouriteIconFragment || id == R.id.plannerIconFragment) {
                 if (FirebaseAuth.getInstance().getCurrentUser() != null &&
                         FirebaseAuth.getInstance().getCurrentUser().isAnonymous()) {
@@ -75,87 +64,34 @@ public class HomePage extends AppCompatActivity {
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
-        findViewById(R.id.logoutButton).setOnClickListener(v -> showLogoutDialog());
+        logoutButton.setOnClickListener(v -> showLogoutDialog());
+
+        // Setup Network Monitor
+        setupNetworkMonitor();
     }
 
-    private void initializeNetworkMonitor() {
+    private void setupNetworkMonitor() {
         networkMonitor = new NetworkMonitor(this, new NetworkMonitor.NetworkCallback() {
             @Override
             public void onNetworkAvailable() {
                 runOnUiThread(() -> {
-                    showContent();
-                    Toast.makeText(HomePage.this, "Internet connection restored",
-                            Toast.LENGTH_SHORT).show();
+                    // إخفاء شاشة No Internet
+                    noInternetLayout.setVisibility(View.GONE);
+                    homeFragmentContainer.setVisibility(View.VISIBLE);
                 });
             }
 
             @Override
             public void onNetworkUnavailable() {
                 runOnUiThread(() -> {
-                    hideContent();
+                    // إظهار شاشة No Internet
+                    noInternetLayout.setVisibility(View.VISIBLE);
+                    homeFragmentContainer.setVisibility(View.GONE);
+                    Toast.makeText(HomePage.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 });
             }
         });
-    }
-
-    private void showContent() {
-        contentContainer.setVisibility(View.VISIBLE);
-        noInternetView.setVisibility(View.GONE);
-        bottomNav.setEnabled(true);
-        findViewById(R.id.logoutButton).setEnabled(true);
-    }
-
-    private void hideContent() {
-        contentContainer.setVisibility(View.GONE);
-        noInternetView.setVisibility(View.VISIBLE);
-        bottomNav.setEnabled(false);
-        findViewById(R.id.logoutButton).setEnabled(false);
-        if (!lottieAnimationView.isAnimating()) {
-            lottieAnimationView.playAnimation();
-        }
-    }
-
-    private void checkNetworkAndUpdateUI() {
-        if (networkMonitor.isNetworkAvailable()) {
-            showContent();
-            Toast.makeText(this, "Connected to internet", Toast.LENGTH_SHORT).show();
-        } else {
-            lottieAnimationView.cancelAnimation();
-            lottieAnimationView.playAnimation();
-            Toast.makeText(this, "Still no internet connection", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (networkMonitor != null) {
-            networkMonitor.register();
-        }
-        if (networkMonitor != null && !networkMonitor.isNetworkAvailable()) {
-            hideContent();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (networkMonitor != null) {
-            networkMonitor.unregister();
-        }
-        if (lottieAnimationView.isAnimating()) {
-            lottieAnimationView.cancelAnimation();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // إعادة تشغيل الأنيميشن إذا كان المحتوى مخفياً
-        if (noInternetView.getVisibility() == View.VISIBLE &&
-                !lottieAnimationView.isAnimating()) {
-            lottieAnimationView.playAnimation();
-        }
+        networkMonitor.register();
     }
 
     private void showLogoutDialog() {
@@ -167,6 +103,7 @@ public class HomePage extends AppCompatActivity {
                 .setBackground(getResources().getDrawable(R.drawable.dialog_background, getTheme()))
                 .show();
     }
+
     private void performLogout() {
         try {
             FirebaseAuth.getInstance().signOut();
@@ -184,23 +121,35 @@ public class HomePage extends AppCompatActivity {
             finish();
 
             Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+
         } catch (Exception e) {
             Toast.makeText(this, "Logout failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     private void showRegisterRequiredDialog() {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Login")
                 .setMessage("Please login to use this feature 🥹?")
-                .setPositiveButton("Login", (dialog, which) -> performLogin())
+                .setPositiveButton("Logout", (dialog, which) -> performLogout())
                 .setNegativeButton("Stay", null)
                 .setBackground(getResources().getDrawable(R.drawable.dialog_background, getTheme()))
                 .show();
     }
-    private void performLogin() {
-        Intent intent = new Intent(this, AuthActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (networkMonitor != null) {
+            networkMonitor.register();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (networkMonitor != null) {
+            networkMonitor.unregister();
+        }
     }
 }

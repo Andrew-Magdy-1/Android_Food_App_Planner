@@ -45,17 +45,7 @@
                 app:elevation="8dp"
                 app:rippleColor="#FF4757" />
 
-            <!-- Back Button -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabBack"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="top|start"
-                android:layout_margin="20dp"
-                app:backgroundTint="#FFFFFF"
-                app:tint="#2D2D2D"
-                app:elevation="6dp"
-                app:fabCustomSize="48dp" />
+
 
         </FrameLayout>
 
@@ -245,16 +235,12 @@
                         android:lineSpacingExtra="6dp" />
 
                 </LinearLayout>
-
-                <!-- Action Buttons -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="16dp"
                     android:gravity="center">
-
-                    <!-- Add to Cart Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAddToPlan"
                         android:layout_width="0dp"
@@ -269,20 +255,7 @@
                         app:backgroundTint="#3498DB"
                         app:elevation="4dp" />
 
-                    <!-- Order Now Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnOrderNow"
-                        android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:text="Order Now"
-                        android:textSize="16sp"
-                        app:iconGravity="textStart"
-                        app:iconPadding="8dp"
-                        app:cornerRadius="16dp"
-                        app:backgroundTint="#27AE60"
-                        app:elevation="4dp" />
+
 
                 </LinearLayout>
 
