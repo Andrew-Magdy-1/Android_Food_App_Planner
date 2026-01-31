@@ -8,154 +8,211 @@
     android:background="@color/white"
     tools:context=".archistartcode.presentation.search.view.SearchIconFragment">
 
-    <View
-        android:id="@+id/view_header_bg"
-        android:layout_width="416dp"
-        android:layout_height="255dp"
-        android:background="@drawable/header_background_shape"
+    <ImageView
+        android:id="@+id/iv_header_image"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/searchimage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_overlay"
+        app:layout_constraintBottom_toBottomOf="@id/iv_header_image"
+        app:layout_constraintEnd_toEndOf="@id/iv_header_image"
+        app:layout_constraintStart_toStartOf="@id/iv_header_image"
+        app:layout_constraintTop_toTopOf="@id/iv_header_image" />
 
+    <!-- العنوان -->
     <TextView
         android:id="@+id/tv_search_title"
-        android:layout_width="223dp"
-        android:layout_height="87dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
         android:text="Discover More"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/card_search"
+        android:fontFamily="sans-serif-medium"
+        android:elevation="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.627" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_search_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:text="Find your favorite meals"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:alpha="0.9"
+        android:elevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_search_title" />
+
+    <!-- بطاقة البحث -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="170dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="8dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="140dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
         app:cardBackgroundColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:hintEnabled="false"
-            app:startIconDrawable="@android:drawable/ic_menu_search"
-            app:startIconTint="@color/black"
-            app:boxBackgroundMode="none"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp">
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/colorPrimary"
+                />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_search"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="search_hint"
+                android:hint="Search for meals..."
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:textColorHint="@color/colorPrimary"
+                android:textColorHint="#A0A0A0"
+                android:textColor="@color/black"
                 android:background="@null"
-                android:textSize="16sp"
-                android:padding="18dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:textSize="15sp"
+                android:paddingVertical="14dp"
+                android:paddingEnd="12dp"/>
+
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout
-        android:id="@+id/layout_filter_buttons"
+    <!-- أزرار الفلاتر -->
+    <HorizontalScrollView
+        android:id="@+id/scroll_filter_buttons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:paddingHorizontal="16dp"
-        android:orientation="horizontal"
-        android:weightSum="3"
+        android:layout_marginTop="24dp"
+        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/card_search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_filter_category"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="6dp"
-            android:text="Category"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
-            app:strokeColor="@color/black"
-            app:cornerRadius="16dp"/>
+        <LinearLayout
+            android:id="@+id/layout_filter_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_filter_ingredient"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="6dp"
-            android:text="Ingredient"
-            android:singleLine="true"
-            android:ellipsize="none"
-            android:textAllCaps="false"
-            app:backgroundTint="@color/filter_button_bg"
-            android:textColor="@color/colorPrimaryDark"
-            app:strokeColor="@color/black"
-            app:cornerRadius="16dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_filter_category"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:minWidth="100dp"
+                android:layout_marginEnd="10dp"
+                android:paddingHorizontal="20dp"
+                android:text="Category"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimaryDark"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="1.5dp"
+                app:cornerRadius="22dp"
+                app:iconSize="18dp"
+                app:iconTint="@color/colorPrimary"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_filter_country"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_marginHorizontal="6dp"
-            android:layout_weight="1"
-            android:text="Country"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
-            app:cornerRadius="16dp"
-            app:strokeColor="@color/black" />
-    </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_filter_ingredient"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:minWidth="100dp"
+                android:layout_marginEnd="10dp"
+                android:paddingHorizontal="20dp"
+                android:text="Ingredient"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimaryDark"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="1.5dp"
+                app:cornerRadius="22dp"
+                app:iconSize="18dp"
+                app:iconTint="@color/colorPrimary"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_filter_country"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:minWidth="100dp"
+                android:paddingHorizontal="20dp"
+                android:text="Country"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimaryDark"
+                app:cornerRadius="22dp"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="1.5dp"
+                app:iconSize="18dp"
+                app:iconTint="@color/colorPrimary"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- قائمة النتائج -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search_results"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:paddingHorizontal="12dp"
-        android:paddingBottom="100dp"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/layout_filter_buttons"
+        app:layout_constraintTop_toBottomOf="@id/scroll_filter_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_meal_vertical"/>
 
+    <!-- شريط التحميل -->
     <ProgressBar
         android:id="@+id/progress_bar_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateTint="@color/white"
+        android:indeterminateTint="@color/colorPrimary"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/layout_filter_buttons"
+        app:layout_constraintTop_toBottomOf="@id/scroll_filter_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- رسالة عدم وجود إنترنت -->
     <FrameLayout
         android:id="@+id/no_internet_search_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/layout_filter_buttons"
+        app:layout_constraintTop_toBottomOf="@id/scroll_filter_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
