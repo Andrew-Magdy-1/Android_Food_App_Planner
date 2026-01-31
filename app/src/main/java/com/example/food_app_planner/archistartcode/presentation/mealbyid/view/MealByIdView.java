@@ -7,4 +7,5 @@ import java.util.List;
 public interface MealByIdView {
     void onSuccess(MealById mealByIdList);
     void onFailure(String errorMessage);
+    void showRegisterRequiredDialog();
 }

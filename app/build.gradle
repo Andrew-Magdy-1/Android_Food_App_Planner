@@ -75,6 +75,10 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.8.4")
     implementation 'com.google.firebase:firebase-firestore'
 
+    implementation "com.airbnb.android:lottie:6.1.0"
+
+
+
 
 
     // If using FirebaseUI (easier)

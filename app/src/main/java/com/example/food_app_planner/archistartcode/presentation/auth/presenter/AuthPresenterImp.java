@@ -32,8 +32,10 @@ public class AuthPresenterImp implements AuthPresenter {
         if (!validateEmailPassword(email, password)) {
             return;
         }
-        view.clearErrors();
-        view.showLoading();
+        if (view != null) {
+            view.clearErrors();
+            view.showLoading();
+        }
         firebaseRepo.signInWithEmail(email, password, new FirebaseRepo.AuthCallback() {
             @Override
             public void onSuccess(String message) {
@@ -153,7 +155,6 @@ public class AuthPresenterImp implements AuthPresenter {
             public void onSuccess(FirebaseUser user) {
                 if (view != null) {
                     view.hideLoading();
-
                     view.showSuccess("Signed in as guest");
                     view.navigateToHomePage(user.getDisplayName());
                 }

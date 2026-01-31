@@ -2,82 +2,172 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/mainContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".archistartcode.presentation.homepage.view.HomePage">
 
-    <View
-        android:id="@+id/redHeader"
+    <!-- المحتوى الرئيسي -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contentContainer"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/home_page_top_style"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/redHeader"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/home_page_top_style"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/helloText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello,"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="36dp"
+            app:layout_constraintTop_toTopOf="@id/redHeader"
+            app:layout_constraintStart_toStartOf="@id/redHeader" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="James"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/helloText"
+            app:layout_constraintBottom_toBottomOf="@id/helloText"
+            app:layout_constraintStart_toEndOf="@id/helloText" />
+
+        <ImageButton
+            android:id="@+id/logoutButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_logout"
+            app:tint="@color/white"
+            android:background="@drawable/circle_background"
+            android:scaleType="centerInside"
+            android:padding="8dp"
+            android:contentDescription="Logout"
+            app:layout_constraintTop_toTopOf="@id/helloText"
+            app:layout_constraintBottom_toBottomOf="@id/helloText"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find a source you want to learn"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:alpha="0.9"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toBottomOf="@id/helloText"
+            app:layout_constraintStart_toStartOf="@id/redHeader" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/homeFragmentContainer"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/my_bottom_nav"
+            app:layout_constraintTop_toBottomOf="@id/redHeader"
+            app:layout_constraintBottom_toTopOf="@id/bottomNav"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_nav_menu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- واجهة No Internet مع Lottie -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/noInternetView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/helloText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello,"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="36dp"
-        app:layout_constraintTop_toTopOf="@id/redHeader"
-        app:layout_constraintStart_toStartOf="@id/redHeader" />
-
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="James"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginStart="8dp"
-        app:layout_constraintTop_toTopOf="@id/helloText"
-        app:layout_constraintBottom_toBottomOf="@id/helloText"
-        app:layout_constraintStart_toEndOf="@id/helloText" />
-
-    <TextView
-        android:id="@+id/subtitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Find a source you want to learn"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:alpha="0.9"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintTop_toBottomOf="@id/helloText"
-        app:layout_constraintStart_toStartOf="@id/redHeader" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/homeFragmentContainer"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/my_bottom_nav"
-        app:layout_constraintTop_toBottomOf="@id/redHeader"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:lottie_rawRes="@raw/trail_loading"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/txtNoInternetTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/txtNoInternetTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Internet Connection"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/lottieAnimationView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/txtNoInternetMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please check your connection and try again"
+            android:textSize="14sp"
+            android:textColor="@color/guestBtn"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/txtNoInternetTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retry"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="12dp"
+            app:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            app:cornerRadius="20dp"
+            app:layout_constraintTop_toBottomOf="@id/txtNoInternetMessage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

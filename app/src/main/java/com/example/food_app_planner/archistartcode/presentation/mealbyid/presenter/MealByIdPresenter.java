@@ -7,4 +7,5 @@ public interface MealByIdPresenter {
     void getMealById();
     void insertProductToFav(MealById meal);
     void insertToCalender(CalenderMeal calenderMeal);
+    //boolean ifUserIsAnAnonymous( );
 }
