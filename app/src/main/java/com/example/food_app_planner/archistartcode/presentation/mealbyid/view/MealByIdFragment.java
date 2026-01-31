@@ -2,13 +2,12 @@ package com.example.food_app_planner.archistartcode.presentation.mealbyid.view;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,21 +16,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseManager;
+import com.example.food_app_planner.archistartcode.presentation.auth.view.AuthActivity;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.presenter.MealByIdPresenter;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.presenter.MealByIdPresenterImp;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMealListener,MealOnClickLIistener {
     private String id;
@@ -48,7 +48,7 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
     private Button addToPlan;
 
     public MealByIdFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -96,14 +96,14 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
         favBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (mealOnClickLIistener != null) {
                     String userId = FirebaseManager.getInstance().getCurrentUserId();
                     if (userId != null) {
                         mealByIdList.setUserId(userId);
                     }
                    mealByIdPresenter.insertProductToFav(mealByIdList);
-                   // mealOnClickLIistener.addMealToFav(mealByIdList);
-                    Toast.makeText(getContext(), "Added to favorites!", Toast.LENGTH_SHORT).show();
+
 
                 }
 
@@ -127,10 +127,7 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
                         calenderMeal.setStrArea(mealByIdList.getStrArea());
                         calenderMeal.setStrCategory(mealByIdList.getStrCategory());
                         calenderMeal.setTimestamp(selectedCal.getTimeInMillis());
-
-                        //mealOnClickLIistener.addMealToPlan(calenderMeal);
                         mealByIdPresenter.insertToCalender(calenderMeal);
-                        Toast.makeText(getContext(), "Added to plan!", Toast.LENGTH_SHORT).show();
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
@@ -182,6 +179,30 @@ public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMe
     @Override
     public void onFailure(String errorMessage) {
 
+    }
+
+    @Override
+    public void showRegisterRequiredDialog() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Login")
+                .setMessage("Please login to use this feature 🥹")
+                .setPositiveButton("Login", (dialog, which) -> performLogin())
+                .setNegativeButton("Cancel", null)
+                .setBackground(requireContext().getResources().getDrawable(R.drawable.dialog_background, requireContext().getTheme()))
+                .show();
+
+    }
+    private void performLogin() {
+        try {
+           FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(requireContext(), AuthActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            requireActivity().finish();
+            Toast.makeText(requireContext(), "Redirecting to Login...", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("MealByIdFragment", "Navigation failed: " + e.getMessage());
+        }
     }
 
     @Override

@@ -1,49 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="3dp"
-    android:backgroundTint="@android:color/white">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:padding="12dp">
 
 
-        <ImageView
-            android:id="@+id/areaflag"
-            android:layout_width="0dp"
-            android:layout_height="140dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/flagContainer"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:cardCornerRadius="35dp"
+        app:cardElevation="3dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="#F5F5F5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/areaLottie"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                app:lottie_rawRes="@raw/trail_loading"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
+
+            <ImageView
+                android:id="@+id/areaflag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@android:color/transparent" />
+
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 
-        <TextView
-            android:id="@+id/mealname"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Classic Burger"
-            android:textColor="#333333"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/areaflag" />
+
+    <TextView
+
+        android:id="@+id/mealname"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+
+        android:text="FRENCH"
+
+        android:textColor="#555555"
+
+        android:textSize="12sp"
+
+        android:fontFamily="sans-serif-medium"
+
+        android:letterSpacing="0.05"
+
+        app:layout_constraintEnd_toEndOf="@id/flagContainer"
+
+        app:layout_constraintStart_toStartOf="@id/flagContainer"
+
+        app:layout_constraintTop_toBottomOf="@id/flagContainer" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

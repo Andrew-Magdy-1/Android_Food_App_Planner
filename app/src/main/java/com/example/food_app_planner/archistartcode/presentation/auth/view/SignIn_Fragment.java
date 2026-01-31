@@ -15,9 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.food_app_planner.R;
-import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseManager;
-import com.example.food_app_planner.archistartcode.database.calendermeal.CalenderMealDataBase;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenter;
 import com.example.food_app_planner.archistartcode.presentation.auth.presenter.AuthPresenterImp;
 import com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePage;
@@ -36,7 +34,6 @@ public class SignIn_Fragment extends Fragment implements AuthView {
     private static final int RC_SIGN_IN = 1001;
     private static final String TAG = "SignInFragment";
     private AuthPresenter authPresenter;
-
     private MaterialButton btnSignIn;
     private View googleButtonView;
     private TextInputEditText etEmail, etPassword;
@@ -44,7 +41,6 @@ public class SignIn_Fragment extends Fragment implements AuthView {
     private GoogleSignInClient googleSignInClient;
     private TextView goToSignUp;
     private FirebaseManager firebaseManager;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

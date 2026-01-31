@@ -27,18 +27,12 @@ public class FirebaseRepo {
         firebaseRemoteDataSource.signInWithEmail(email, password, new FirebaseNetworkResponse() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                //String name = user.getDisplayName() != null ? user.getDisplayName() : "User";
-
-
-
-                // Sync data from Firestore
                 syncUserDataAfterLogin(user.getUid());
                 String name = user.getDisplayName();
                     if (name == null || name.isEmpty()) {
                         name = user.getEmail().split("@")[0];
                     }
 
-                //callback.onSuccess("Welcome, " + name + "!");
                 callback.onSuccess(name);
             }
 
@@ -76,20 +70,14 @@ public class FirebaseRepo {
                 String name = user.getDisplayName() != null ? user.getDisplayName() : "User";
                 String email = user.getEmail();
                 String userId = user.getUid();
-
-                // Check if user is new
                 firebaseRemoteDataSource.checkIfUserIsNew(user, new FirebaseRemoteDataSource.UserCheckCallback() {
                     @Override
                     public void onResult(boolean isNewUser) {
                         if (isNewUser) {
-                            // Create user document for new Google user
                             callback.onSuccess("Welcome, " + name + "!");
                         } else {
-                            // Update last login for existing user
                             callback.onSuccess("Welcome back, " + name + "!");
                         }
-
-                        // Sync data from Firestore
                         syncUserDataAfterLogin(userId);
                     }
                 });
@@ -106,8 +94,9 @@ public class FirebaseRepo {
         firebaseRemoteDataSource.signInAnonymously(new FirebaseNetworkResponse() {
             @Override
             public void onSuccess(FirebaseUser user) {
-                String userId = user.getUid();
-                callback.onSuccess("Signed in as guest");
+
+                if(user.isAnonymous()){
+                callback.onSuccess("guest");}
             }
 
             @Override
@@ -138,22 +127,7 @@ public class FirebaseRepo {
 
     private void syncUserDataAfterLogin(String userId) {
         Log.d(TAG, "Starting data sync for user: " + userId);
-        // Data sync will be handled by the respective Repositories (CalenderMealRepo, FavoriteRepo)
-        // This method just logs for now
+
     }
 
-    // Method to migrate guest data to registered user
-    public void migrateGuestData(String guestUserId, String newUserId, MigrationCallback callback) {
-        // This method should be called when guest upgrades to registered account
-        // Implementation depends on your data structure
-        Log.d(TAG, "Migrating data from guest " + guestUserId + " to user " + newUserId);
-
-        // You can implement actual migration logic here
-        // For now, just call success
-        callback.onMigrationComplete(true, "Data migrated successfully");
-    }
-
-    public interface MigrationCallback {
-        void onMigrationComplete(boolean success, String message);
-    }
 }

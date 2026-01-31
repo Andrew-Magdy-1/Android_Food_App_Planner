@@ -69,9 +69,9 @@ public class PlannerAdapter extends RecyclerView.Adapter<PlannerAdapter.ViewHold
         void bind(CalenderMeal calenderMeal){
             Log.i("mealimg", calenderMeal.getStrMealThumb());
             Glide.with(itemView).load(calenderMeal.getStrMealThumb()).into(mealImg);
-            strMeal.setText(calenderMeal.getStrArea());
+            strMeal.setText(calenderMeal.getStrMeal());
             strCat.setText(calenderMeal.getStrCategory());
-            //strArea.setText(calenderMeal.getStrArea());
+            strArea.setText(calenderMeal.getStrArea());
             del.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

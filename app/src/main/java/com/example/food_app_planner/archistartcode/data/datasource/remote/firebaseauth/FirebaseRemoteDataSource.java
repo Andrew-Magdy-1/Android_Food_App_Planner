@@ -94,7 +94,7 @@ public class FirebaseRemoteDataSource {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null) {
+                        if (user != null && user.isAnonymous()) {
                             Log.d(TAG, "Anonymous sign in successful");
                             response.onSuccess(user);
                         } else {
