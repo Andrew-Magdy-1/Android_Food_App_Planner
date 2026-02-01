@@ -66,7 +66,6 @@ public class HomePage extends AppCompatActivity {
 
         logoutButton.setOnClickListener(v -> showLogoutDialog());
 
-        // Setup Network Monitor
         setupNetworkMonitor();
     }
 
@@ -75,7 +74,6 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onNetworkAvailable() {
                 runOnUiThread(() -> {
-                    // إخفاء شاشة No Internet
                     noInternetLayout.setVisibility(View.GONE);
                     homeFragmentContainer.setVisibility(View.VISIBLE);
                 });
@@ -84,7 +82,6 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onNetworkUnavailable() {
                 runOnUiThread(() -> {
-                    // إظهار شاشة No Internet
                     noInternetLayout.setVisibility(View.VISIBLE);
                     homeFragmentContainer.setVisibility(View.GONE);
                     Toast.makeText(HomePage.this, "No Internet Connection", Toast.LENGTH_SHORT).show();

@@ -30,7 +30,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
-
 import java.util.Calendar;
 
 public class MealByIdFragment extends Fragment implements MealByIdView,OnClickMealListener,MealOnClickLIistener {

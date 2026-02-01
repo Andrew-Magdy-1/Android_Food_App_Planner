@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMeals;
-import com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.presenter.SpecificCategoryPresenter;
-import com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.view.SpecificCategoryAdapter;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.OnClickMealListener;
 import com.example.food_app_planner.archistartcode.presentation.specificarea.presenter.SpecificAreaPresenter;
 import com.example.food_app_planner.archistartcode.presentation.specificarea.presenter.SpecificAreaPresenterImp;

@@ -22,7 +22,7 @@ import com.example.food_app_planner.archistartcode.presentation.favouritemeals.p
 import java.util.List;
 
 
-public class FavouriteIconFragment extends Fragment implements OnFavClickListener,FavView{
+public class FavouriteIconFragment extends Fragment implements OnFavClickListener{
 
     RecyclerView recyclerView;
     FavAdapter favAdapter;
@@ -53,18 +53,23 @@ public class FavouriteIconFragment extends Fragment implements OnFavClickListene
         favAdapter=new FavAdapter(this);
         recyclerView.setAdapter(favAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        favMealPresenter=new FavProdPresenterImp(getContext(),this);
+        favMealPresenter=new FavProdPresenterImp(getContext());
         favMealPresenter.getFavouritsFromFav();
-
-        favMealPresenter.getFavMeals().observe(getViewLifecycleOwner(), new Observer<List<MealById>>() {
-            @Override
-            public void onChanged(List<MealById> mealByIdList) {
-                Log.d("FavFragment", "Data received: " + mealByIdList.size() + " items");
-                favAdapter.setMealByIdList(mealByIdList);
+        favMealPresenter.getFavMeals().subscribe(item->{
+            favAdapter.setMealByIdList(item);
 
 
-            }
         });
+
+//        favMealPresenter.getFavMeals().observe(getViewLifecycleOwner(), new Observer<List<MealById>>() {
+//            @Override
+//            public void onChanged(List<MealById> mealByIdList) {
+//                Log.d("FavFragment", "Data received: " + mealByIdList.size() + " items");
+//                favAdapter.setMealByIdList(mealByIdList);
+//
+//
+//            }
+//        });
         return v;
     }
 
@@ -80,9 +85,5 @@ public class FavouriteIconFragment extends Fragment implements OnFavClickListene
         favMealPresenter.deleteFromFire(id);
     }
 
-    @Override
-    public void OnProductDeleted(MealById mealById) {
-        Toast.makeText(requireContext(), "Meal deleted", Toast.LENGTH_SHORT).show();
 
-    }
 }

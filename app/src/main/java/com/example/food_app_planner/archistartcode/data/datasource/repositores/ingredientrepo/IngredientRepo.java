@@ -2,8 +2,10 @@ package com.example.food_app_planner.archistartcode.data.datasource.repositores.
 
 import android.content.Context;
 
-import com.example.food_app_planner.archistartcode.data.datasource.remote.ingrediantremote.IngredientNetworkResponse;
+import com.example.food_app_planner.archistartcode.data.datasource.models.ingredient.IngredientResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.ingrediantremote.IngredientRemoteDataSource;
+
+import io.reactivex.rxjava3.core.Observable;
 
 public class IngredientRepo {
     public IngredientRemoteDataSource ingredientRemoteDataSource;
@@ -12,7 +14,7 @@ public class IngredientRepo {
         ingredientRemoteDataSource = new IngredientRemoteDataSource();
     }
 
-    public void getIngredientsFromRepo(IngredientNetworkResponse ingredientNetworkResponse) {
-        ingredientRemoteDataSource.getIngredients(ingredientNetworkResponse);
+    public Observable<IngredientResponse> getIngredientsFromRepo() {
+       return ingredientRemoteDataSource.getIngredients();
     }
 }

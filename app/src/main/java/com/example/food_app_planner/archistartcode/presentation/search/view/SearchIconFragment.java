@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,8 @@ import com.example.food_app_planner.archistartcode.data.datasource.models.countr
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMeals;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbycategoryname.CategoryDetails;
 import com.example.food_app_planner.archistartcode.data.datasource.models.ingredient.Ingredient;
+import com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.view.SpecificCategoryPageFragment;
+import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.OnClickMealListener;
 import com.example.food_app_planner.archistartcode.presentation.search.presenter.SearchPresenter;
 import com.example.food_app_planner.archistartcode.presentation.search.presenter.SearchPresenterImp;
 import com.google.android.material.button.MaterialButton;
@@ -34,13 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SearchIconFragment extends Fragment implements SearchView  {
+public class SearchIconFragment extends Fragment implements SearchView, OnClickMealListener {
 
     private TextInputEditText etSearch;
     private MaterialButton btnFilterCategory, btnFilterIngredient, btnFilterCountry;
     private RecyclerView rvSearchResults;
     private ProgressBar progressBar;
-    private FrameLayout noInternetContainer;
 
     private SearchMealAdapter searchMealAdapter;
     private List<CategoryDetails> allMealsList = new ArrayList<>();
@@ -57,6 +59,8 @@ public class SearchIconFragment extends Fragment implements SearchView  {
         setupRecyclerView();
         setupClickListeners();
         searchPresenter = new SearchPresenterImp(getContext(), this);
+        searchMealAdapter.setOnMealClickListener(this);
+
         return view;
     }
     private void initViews(View view) {
@@ -66,7 +70,7 @@ public class SearchIconFragment extends Fragment implements SearchView  {
         btnFilterCountry = view.findViewById(R.id.btn_filter_country);
         rvSearchResults = view.findViewById(R.id.rv_search_results);
         progressBar = view.findViewById(R.id.progress_bar_search);
-        //noInternetContainer = view.findViewById(R.id.no_internet_search_container);
+
     }
 
     private void setupRecyclerView() {
@@ -294,6 +298,15 @@ public class SearchIconFragment extends Fragment implements SearchView  {
         if (imm != null && getView() != null) {
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void onClickMeal(String id) {
+        Bundle bundle=new Bundle();
+        bundle.putString("Meal_id",id);
+        NavHostFragment.findNavController(SearchIconFragment.this)
+                .navigate(R.id.action_searchIconFragment_to_mealByIdFragment, bundle);
+
     }
 
     interface OnItemSelectedListener {

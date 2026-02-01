@@ -6,8 +6,10 @@ import com.example.food_app_planner.archistartcode.data.datasource.models.filter
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
+
 public interface FavMealPresenter {
-    LiveData<List<MealById>>getFavMeals();
+    Observable<List<MealById>> getFavMeals();
     void deleteMealFromFav(MealById mealById);
     void getFavouritsFromFav();
     void deleteFromFire(String id);

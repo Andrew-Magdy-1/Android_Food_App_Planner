@@ -3,13 +3,13 @@ package com.example.food_app_planner.archistartcode.presentation.homepage.presen
 import android.content.Context;
 
 import com.example.food_app_planner.archistartcode.data.datasource.models.category.Category;
-import com.example.food_app_planner.archistartcode.data.datasource.models.randommeal.RandomMeal;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.categoryremote.CategoryNetworkResponse;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.randommealremote.RandomMealNetworkResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.homerandomandcategories.RandomMealRepo;
 import com.example.food_app_planner.archistartcode.presentation.homepage.view.HomePageView;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomePagePresenterImp implements HomePagePresenter {
     private RandomMealRepo randomMealRepo;
@@ -19,40 +19,30 @@ public class HomePagePresenterImp implements HomePagePresenter {
         this.homePageView=homePageView;
     }
     public void getRandomMeal() {
-        randomMealRepo.getRandomMeals(new RandomMealNetworkResponse() {
-            @Override
-            public void onSuccess(List<RandomMeal> randomMealList) {
-                homePageView.onSuccessRandoms(randomMealList);
-
-
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                homePageView.onFailureRandoms(errorMessage);
-
-            }
-        });
-
-
+        randomMealRepo.getRandomMeals().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(item->{
+                    homePageView.onSuccessRandoms(item.meals);
+                });
     }
 
     @Override
     public void getCategories() {
-        randomMealRepo.getCatFromRepo(new CategoryNetworkResponse() {
+        randomMealRepo.getCatFromRepo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(item->{
+                    List<Category> categoryList=item.categories;
+                    homePageView.onSuccessCategories(categoryList);
 
-            @Override
-            public void onSuccess(List<Category> categoryList) {
-                homePageView.onSuccessCategories(categoryList);
-
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                homePageView.onFailureCategories(errorMessage);
-
-            }
-        });
-
+                },
+                error->{
+                    homePageView.onFailureCategories(error.getMessage());
+                }
+                );
     }
+
+
+
+
 }

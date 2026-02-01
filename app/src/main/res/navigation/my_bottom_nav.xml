@@ -52,7 +52,11 @@
         android:id="@+id/searchIconFragment"
         android:name="com.example.food_app_planner.archistartcode.presentation.search.view.SearchIconFragment"
         android:label="fragment_search_icon"
-        tools:layout="@layout/fragment_search_icon" />
+        tools:layout="@layout/fragment_search_icon" >
+        <action
+            android:id="@+id/action_searchIconFragment_to_mealByIdFragment"
+            app:destination="@id/mealByIdFragment" />
+    </fragment>
     <fragment
         android:id="@+id/plannerIconFragment"
         android:name="com.example.food_app_planner.archistartcode.presentation.calenderpage.view.PlannerIconFragment"

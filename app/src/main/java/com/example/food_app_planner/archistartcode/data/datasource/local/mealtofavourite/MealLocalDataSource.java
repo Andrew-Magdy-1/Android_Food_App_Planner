@@ -12,6 +12,11 @@ import com.example.food_app_planner.archistartcode.database.favourits.MealDAO;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class MealLocalDataSource {
     private MealDAO mealDAO;
     private FirebaseManager firebaseManager;
@@ -24,41 +29,27 @@ public class MealLocalDataSource {
         firebaseManager = FirebaseManager.getInstance();
     }
 
-    public void insertMeal(MealById mealById) {
-        new Thread(() -> {
-            try {
-                String userId = firebaseManager.getCurrentUserId();
-                if (userId != null) {
-                    mealById.setUserId(userId);
-                } else {
-                    mealById.setUserId("guest");
-                }
+    public Completable insertMeal(MealById mealById) {
+         if (firebaseManager.isUserLoggedIn()) {
+             firebaseManager.syncFavouriteMealToFirestore(mealById);
+         }
+                return mealDAO.insertMeal(mealById);
 
-                mealDAO.insertMeal(mealById);
-                Log.d(TAG, "✅ Favorite saved locally: " + mealById.getStrMeal());
-
-                if (firebaseManager.isUserLoggedIn()) {
-                    firebaseManager.syncFavouriteMealToFirestore(mealById);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "❌ Error inserting favorite: " + e.getMessage());
-            }
-        }).start();
     }
 
-    public void deleteMeal(MealById mealById) {
-        new Thread(() -> {
-            try {
-                mealDAO.deletMeal(mealById);
-                Log.d(TAG, "✅ Favorite deleted locally: " + mealById.getStrMeal());
+    public Completable deleteMeal(MealById mealById) {
+        //new Thread(() -> {
+            //try {
+                return mealDAO.deletMeal(mealById);
+                //Log.d(TAG, "✅ Favorite deleted locally: " + mealById.getStrMeal());
 
-            } catch (Exception e) {
-                Log.e(TAG, "❌ Error deleting favorite: " + e.getMessage());
-            }
-        }).start();
+            //} catch (Exception e) {
+             //   Log.e(TAG, "❌ Error deleting favorite: " + e.getMessage());
+            //}
+       // }).start();
     }
 
-    public LiveData<List<MealById>> getMeals() {
+    public Observable<List<MealById>> getMeals() {
         String userId = firebaseManager.getCurrentUserId();
 
 
@@ -75,22 +66,24 @@ public class MealLocalDataSource {
         isSyncing = true;
     }
     public void getFavoritesFirestore() {
-        firebaseManager.fetchFavouritsFromFirestore(new FirebaseManager.FirestoreCallback<List<MealById>>() {
-            @Override
-            public void onCallback(List<MealById> data) {
-                if (data == null || data.isEmpty()) {
-                    Log.d(TAG, "No meals fetched from FavouritsFirestore");
-
-                }
-                new Thread(() -> {
-                    for (MealById meal : data) {
-                        MealById existingMeal = mealDAO.getMealById(meal.getIdMeal());
-                        if (existingMeal == null) {
-                            mealDAO.insertMeal(meal);
-                        }
-                    }
-                }).start();
-
+        firebaseManager.fetchFavouritsFromFirestore(data -> {
+            if (data != null && !data.isEmpty()) {
+                Observable.fromIterable(data)
+                        .concatMapCompletable(meal ->
+                                mealDAO.getMealById(meal.getIdMeal())
+                                        .subscribeOn(Schedulers.io())
+                                        .flatMapCompletable(existing -> Completable.complete())
+                                        .onErrorResumeNext(throwable -> {
+                                            Log.d(TAG, "Meal not found, inserting: " + meal.getStrMeal());
+                                            return mealDAO.insertMeal(meal);
+                                        })
+                        )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> Log.d(TAG, "Favorites Sync Completed"),
+                                e -> Log.e(TAG, "Sync error: " + e.getMessage())
+                        );
             }
         });
     }

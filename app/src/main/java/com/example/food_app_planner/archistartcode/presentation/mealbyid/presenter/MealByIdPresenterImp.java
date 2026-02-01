@@ -1,12 +1,12 @@
 package com.example.food_app_planner.archistartcode.presentation.mealbyid.presenter;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.calender.CalenderMeal;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyidremote.MealByIdNetworkResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.calendermealrepo.CalenderMealRepo;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.filtermealbyidrepo.MealByIdRepo;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.firbaserepo.FirebaseRepo;
@@ -14,6 +14,9 @@ import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.Me
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealByIdPresenterImp implements MealByIdPresenter{
     private MealByIdView mealByIdView;
@@ -32,33 +35,31 @@ public class MealByIdPresenterImp implements MealByIdPresenter{
     }
     @Override
     public void getMealById() {
-        mealByIdRepo.getMealByIdFromRepo(id, new MealByIdNetworkResponse() {
-            @Override
-            public void onSuccess(List<MealById> mealByIdList) {
-                mealByIdView.onSuccess(mealByIdList.get(0));
-            }
+        mealByIdRepo.getMealByIdFromRepo(id).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(item->{
+                                    mealByIdView.onSuccess(item.meals.get(0));
+                                },error->{mealByIdView.onFailure(error.getMessage());});
 
-            @Override
-            public void onFailure(String errorMesage) {
-
-            }
-        });
 
 
     }
-
     @Override
     public void insertProductToFav(MealById meal) {
-        if(firebaseRepo.isGuestUser()){
+        if (firebaseRepo.isGuestUser()) {
             mealByIdView.showRegisterRequiredDialog();
-
-        }else{
-            mealByIdRepo.insertMealToFav(meal);
-            Toast.makeText(context, "Added to favorites!", Toast.LENGTH_SHORT).show();
+        } else {
+            mealByIdRepo.insertMealToFav(meal)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            () -> Toast.makeText(context, "Added to favorites!", Toast.LENGTH_SHORT).show(),
+                            throwable -> {
+                                Log.e("TAG", "Error inserting favorite", throwable);
+                                Toast.makeText(context, "Failed to add!", Toast.LENGTH_SHORT).show();
+                            }
+                    );
         }
-
-
-
     }
 
     @Override
@@ -67,7 +68,8 @@ public class MealByIdPresenterImp implements MealByIdPresenter{
             mealByIdView.showRegisterRequiredDialog();
 
         }else{
-            calenderMealRepo.insertCalenderMeal(calenderMeal);
+            calenderMealRepo.insertCalenderMeal(calenderMeal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
             Toast.makeText(context, "Added to plan!", Toast.LENGTH_SHORT).show();
         }
 

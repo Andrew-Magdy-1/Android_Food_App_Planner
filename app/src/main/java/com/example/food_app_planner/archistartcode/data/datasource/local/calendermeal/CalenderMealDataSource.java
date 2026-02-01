@@ -10,9 +10,12 @@ import com.example.food_app_planner.archistartcode.data.datasource.models.filter
 import com.example.food_app_planner.archistartcode.data.datasource.remote.firebaseauth.FirebaseManager;
 import com.example.food_app_planner.archistartcode.database.calendermeal.CalenderMealDAO;
 import com.example.food_app_planner.archistartcode.database.calendermeal.CalenderMealDataBase;
-import com.example.food_app_planner.archistartcode.database.favourits.MealDAO;
-
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CalenderMealDataSource {
     private CalenderMealDAO calenderMealDAO;
@@ -24,38 +27,24 @@ public class CalenderMealDataSource {
         calenderMealDAO= calenderMealDataBase.calenderMealDAO();
         firebaseManager=FirebaseManager.getInstance();
     }
-    public void inserCalenderMeal(CalenderMeal calenderMeal){
-        new Thread(() -> {
-            try {
-                calenderMealDAO.insertMeal(calenderMeal);
-
-                Log.d(TAG, "Meal saved locally: " + calenderMeal.getStrMeal());
-
+    public Completable inserCalenderMeal(CalenderMeal calenderMeal){
                 if (firebaseManager.isUserLoggedIn()) {
                     firebaseManager.syncCalenderMealToFirestore(calenderMeal);
                 }
-            } catch (Exception e) {
-                Log.e(TAG, "Error inserting meal: " + e.getMessage(), e);
-            }
-        }).start();
+                return calenderMealDAO.insertMeal(calenderMeal);
+
 
     }
-    public void delCalenderMeal(CalenderMeal calenderMeal){
-        new Thread(() -> {
-            try {
-                calenderMealDAO.delCalenderMeal(calenderMeal);
-                Log.d(TAG, "Meal deleted locally: " + calenderMeal.getStrMeal());
-
-                if (calenderMeal.getFirestoreId() != null && !calenderMeal.getFirestoreId().isEmpty()) {
-                    firebaseManager.deleteCalenderMealFromFirestore(calenderMeal.getFirestoreId());
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error deleting meal: " + e.getMessage(), e);
-            }
-        }).start();
+    public Completable delCalenderMeal(CalenderMeal calenderMeal){
+        return calenderMealDAO.delCalenderMeal(calenderMeal)
+                .andThen(Completable.fromAction(() -> {
+                    if (calenderMeal.getFirestoreId() != null && !calenderMeal.getFirestoreId().isEmpty()) {
+                        firebaseManager.deleteCalenderMealFromFirestore(calenderMeal.getFirestoreId());
+                    }
+                }));
 
     }
-    public LiveData<List<CalenderMeal>> getCalenderMeals(long start,long end){
+    public Observable<List<CalenderMeal>> getCalenderMeals(long start, long end){
 
 
         if (!isCalendarSynced && firebaseManager.isUserLoggedIn()) {
@@ -65,25 +54,22 @@ public class CalenderMealDataSource {
         return calenderMealDAO.getCalenderMeals(start, end);
     }
     private void syncFromFirestore(String userId, long startDay, long endDay) {
-        firebaseManager.fetchCalenderMealsFromFirestore(
-                new FirebaseManager.FirestoreCallback<List<CalenderMeal>>() {
-                    @Override
-                    public void onCallback(List<CalenderMeal> firestoreMeals) {
-                        if (firestoreMeals != null && !firestoreMeals.isEmpty()) {
-                            new Thread(() -> {
+        firebaseManager.fetchCalenderMealsFromFirestore(firestoreMeals -> {
+            if (firestoreMeals != null && !firestoreMeals.isEmpty()) {
 
-                                for (CalenderMeal meal : firestoreMeals) {
-                                    CalenderMeal existingMeal =calenderMealDAO.getMealById(meal.getIdMeal());
-                                    if (existingMeal == null) {
-                                        calenderMealDAO.insertMeal(meal);
-                                    }
-                                    //calenderMealDAO.insertMeal(meal);
-                                }
-                                Log.d(TAG, "Synced " + firestoreMeals.size() + " meals from Firestore");
-                            }).start();
-                        }
-                    }
-                });
+                Observable.fromIterable(firestoreMeals)
+                        .flatMapCompletable(meal -> {
+                            return calenderMealDAO.insertMeal(meal)
+                                    .subscribeOn(Schedulers.io());
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()) // اختياري لو حابب تعمل Log في المين
+                        .subscribe(
+                                () -> Log.d(TAG, "✅ Data synced from Firestore to Room successfully"),
+                                throwable -> Log.e(TAG, "❌ Error syncing from Firestore: " + throwable.getMessage())
+                        );
+            }
+        });
     }
     public void updateMealWithFirestoreId(CalenderMeal calenderMeal, String firestoreId) {
         new Thread(() -> {

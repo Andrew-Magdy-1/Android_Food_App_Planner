@@ -33,8 +33,6 @@ public class PlannerIconFragment extends Fragment implements PlannerView,OnCalen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
     }
 
     @Override
@@ -72,12 +70,9 @@ public class PlannerIconFragment extends Fragment implements PlannerView,OnCalen
 
                 cal.set(year, month, dayOfMonth, 23, 59, 59);
                 long endDay = cal.getTimeInMillis();
-                calenderMealPresenter.getCalenderMealPresenetr(startDay,endDay).observe(getViewLifecycleOwner(), new Observer<List<CalenderMeal>>() {
-                    @Override
-                    public void onChanged(List<CalenderMeal> calenderMeals) {
-                        plannerAdapter.setCalenderMeals(calenderMeals);
-                    }
-                });
+                calenderMealPresenter.getCalenderMealPresenetr(startDay,endDay).
+                        subscribe(item ->
+                        {plannerAdapter.setCalenderMeals(item);});
             }
         });
         return v;
