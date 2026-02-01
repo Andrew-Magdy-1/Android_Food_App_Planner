@@ -2,33 +2,35 @@ package com.example.food_app_planner.archistartcode.presentation.favouritemeals.
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
-
-import com.example.food_app_planner.archistartcode.data.datasource.local.mealtofavourite.MealLocalDataSource;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.filtermealbyidrepo.MealByIdRepo;
-import com.example.food_app_planner.archistartcode.presentation.favouritemeals.view.FavView;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class FavProdPresenterImp implements FavMealPresenter {
-    MealLocalDataSource mealLocalDataSource;
-    FavView favView;
+   // FavView favView;
     MealByIdRepo meal;
-    public FavProdPresenterImp(Context context,FavView favView){
-        mealLocalDataSource=new MealLocalDataSource(context);
-        this.favView=favView;
+    public FavProdPresenterImp(Context context){
+       // this.favView=favView;
         meal=new MealByIdRepo(context);
     }
 
     @Override
-    public LiveData<List<MealById>> getFavMeals() {
-        return meal.getFavMeals();
+    public Observable<List<MealById>> getFavMeals() {
+
+        return meal.getFavMeals().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public void deleteMealFromFav(MealById mealById) {
-        mealLocalDataSource.deleteMeal(mealById);
+        meal.deleteMeal(mealById).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
 
     }
 

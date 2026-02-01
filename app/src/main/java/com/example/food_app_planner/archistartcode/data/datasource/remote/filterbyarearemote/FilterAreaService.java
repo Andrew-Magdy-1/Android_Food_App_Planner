@@ -2,12 +2,13 @@ package com.example.food_app_planner.archistartcode.data.datasource.remote.filte
 
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMealsResponse;
 
+import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface FilterAreaService {
     @GET("filter.php")
-    Call<AreaMealsResponse> getAreaMeals(@Query("a") String area);
+    Observable<AreaMealsResponse> getAreaMeals(@Query("a") String area);
 
 }

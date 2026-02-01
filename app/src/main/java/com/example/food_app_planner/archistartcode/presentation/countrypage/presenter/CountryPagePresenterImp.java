@@ -2,12 +2,13 @@ package com.example.food_app_planner.archistartcode.presentation.countrypage.pre
 
 import android.content.Context;
 
-import com.example.food_app_planner.archistartcode.data.datasource.models.countries.Country;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.countryremote.CountryNetworkResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.countryrepo.CountryRepo;
 import com.example.food_app_planner.archistartcode.presentation.countrypage.view.CountryPageView;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CountryPagePresenterImp implements CountryPagePresenter{
     CountryPageView countryPageView;
@@ -20,18 +21,23 @@ public class CountryPagePresenterImp implements CountryPagePresenter{
     }
     @Override
     public void getAllAreas() {
-        countryRepo.getCountriesFromRepo(new CountryNetworkResponse() {
-            @Override
-            public void onSunccess(List<Country> countryList) {
-                countryPageView.onSuccess(countryList);
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                countryPageView.onFailure(errorMessage);
-
-            }
-        });
+        countryRepo.getCountriesFromRepo().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(item->{
+                                    countryPageView.onSuccess(item.meals);
+                                });
+//        countryRepo.getCountriesFromRepo(new CountryNetworkResponse() {
+//            @Override
+//            public void onSunccess(List<Country> countryList) {
+//                countryPageView.onSuccess(countryList);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorMessage) {
+//                countryPageView.onFailure(errorMessage);
+//
+//            }
+//        });
 
     }
 }

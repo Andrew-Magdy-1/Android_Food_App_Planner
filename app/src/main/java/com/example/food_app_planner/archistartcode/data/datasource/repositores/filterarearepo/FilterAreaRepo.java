@@ -2,9 +2,10 @@ package com.example.food_app_planner.archistartcode.data.datasource.repositores.
 
 import android.content.Context;
 
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyarearemote.FilterAreaNetworkResponse;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyarearemote.FilterAreaService;
+import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMealsResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyarearemote.FilterAreasRemoteDataSource;
+
+import io.reactivex.rxjava3.core.Observable;
 
 public class FilterAreaRepo {
     public FilterAreasRemoteDataSource filterAreasRemoteDataSource;
@@ -12,8 +13,8 @@ public class FilterAreaRepo {
         filterAreasRemoteDataSource=new FilterAreasRemoteDataSource();
 
     }
-    public void getAreaMealsFromRepo(String areaname,FilterAreaNetworkResponse filterAreaNetworkResponse){
-        filterAreasRemoteDataSource.getAreaMeals(areaname,filterAreaNetworkResponse);
+    public Observable<AreaMealsResponse> getAreaMealsFromRepo(String areaname){
+        return filterAreasRemoteDataSource.getAreaMeals(areaname);
 
     }
 

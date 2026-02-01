@@ -11,17 +11,21 @@ import com.example.food_app_planner.archistartcode.data.datasource.models.filter
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface MealDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMeal(MealById mealById);
+    Completable insertMeal(MealById mealById);
     @Query("SELECT * FROM meals")
-    LiveData<List<MealById>>mealList();
+    Observable<List<MealById>> mealList();
 
     @Delete
-    void deletMeal(MealById meal);
+    Completable deletMeal(MealById meal);
     @Query("SELECT * FROM meals WHERE idMeal = :mealId")
-    MealById getMealById(String mealId);
+    Single<MealById> getMealById(String mealId);
 
 
 

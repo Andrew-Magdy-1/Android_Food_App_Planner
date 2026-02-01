@@ -10,6 +10,9 @@ import com.example.food_app_planner.archistartcode.data.datasource.models.calend
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+
 public class CalenderMealRepo {
     private CalenderMealDataSource calenderMealDataSource;
 
@@ -17,15 +20,15 @@ public class CalenderMealRepo {
         calenderMealDataSource=new CalenderMealDataSource(context);
 
     }
-    public LiveData<List<CalenderMeal>> getCalenderMealFromRepo(long start,long end){
+    public Observable<List<CalenderMeal>> getCalenderMealFromRepo(long start, long end){
         return calenderMealDataSource.getCalenderMeals( start, end);
 
     }
-    public void delCalenderMeal(CalenderMeal calenderMeal) {
-        calenderMealDataSource.delCalenderMeal(calenderMeal);
+    public Completable delCalenderMeal(CalenderMeal calenderMeal) {
+       return calenderMealDataSource.delCalenderMeal(calenderMeal);
     }
-    public void insertCalenderMeal(CalenderMeal calenderMeal){
-        calenderMealDataSource.inserCalenderMeal(calenderMeal);
+    public Completable insertCalenderMeal(CalenderMeal calenderMeal){
+        return calenderMealDataSource.inserCalenderMeal(calenderMeal);
     }
     public void getCalenderMealFomeremote(){
         calenderMealDataSource.getCalenderMealFirestore();

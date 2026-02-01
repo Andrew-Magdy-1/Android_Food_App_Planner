@@ -6,10 +6,13 @@ import androidx.lifecycle.LiveData;
 
 import com.example.food_app_planner.archistartcode.data.datasource.local.mealtofavourite.MealLocalDataSource;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealById;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyidremote.MealByIdNetworkResponse;
+import com.example.food_app_planner.archistartcode.data.datasource.models.filtermealbyid.MealByIdResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyidremote.MealByIdRemoteDataSource;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 
 public class MealByIdRepo {
    private MealByIdRemoteDataSource mealByIdRemoteDataSource;
@@ -18,18 +21,22 @@ public class MealByIdRepo {
        mealByIdRemoteDataSource=new MealByIdRemoteDataSource();
        mealLocalDataSource=new MealLocalDataSource(context);
    }
-   public void getMealByIdFromRepo(String id, MealByIdNetworkResponse mealByIdNetworkResponse){
-       mealByIdRemoteDataSource.getMealById(id,mealByIdNetworkResponse);
+   public Observable<MealByIdResponse> getMealByIdFromRepo(String id){
+      return mealByIdRemoteDataSource.getMealById(id);
    }
-    public LiveData<List<MealById>> getFavMeals(){
+    public Observable<List<MealById>> getFavMeals(){
         return mealLocalDataSource.getMeals();
     }
-    public void insertMealToFav(MealById meal){
+    public Completable insertMealToFav(MealById meal){
 
-        mealLocalDataSource.insertMeal(meal);
+       return mealLocalDataSource.insertMeal(meal);
     }
     public void getFaovuristFire(){
         mealLocalDataSource.getFavoritesFirestore();
+    }
+    public Completable deleteMeal(MealById mealById) {
+        return mealLocalDataSource.deleteMeal(mealById);
+
     }
     public void delFromFire(String id) {
         mealLocalDataSource.removeFromFire(id);

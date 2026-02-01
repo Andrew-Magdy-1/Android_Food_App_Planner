@@ -22,7 +22,6 @@ import java.util.List;
 public class FavAdapter extends RecyclerView.Adapter<FavAdapter.ViewHolder> {
     private static OnFavClickListener onFavClickListener;
     private List<MealById> mealByIdList;
-    //private FavMealPresenter favMealPresenter;
     public FavAdapter(OnFavClickListener onFavClickListener){
         this.onFavClickListener=onFavClickListener;
         this.mealByIdList=new ArrayList<>();

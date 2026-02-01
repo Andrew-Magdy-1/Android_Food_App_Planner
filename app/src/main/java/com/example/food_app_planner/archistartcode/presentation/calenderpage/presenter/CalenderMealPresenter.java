@@ -6,8 +6,10 @@ import com.example.food_app_planner.archistartcode.data.datasource.models.calend
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
+
 public interface CalenderMealPresenter {
-    LiveData<List<CalenderMeal>> getCalenderMealPresenetr(long start,long end);
+    Observable<List<CalenderMeal>> getCalenderMealPresenetr(long start, long end);
     void delCalenderMeal(CalenderMeal calenderMeal);
     void getFromFireStore(String id);
 }

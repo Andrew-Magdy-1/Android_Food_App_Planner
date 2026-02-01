@@ -12,11 +12,9 @@ import android.view.ViewGroup;
 
 import com.example.food_app_planner.R;
 import com.example.food_app_planner.archistartcode.data.datasource.models.filterbycategoryname.CategoryDetails;
-import com.example.food_app_planner.archistartcode.presentation.categorypage.view.CategoryPageFragment;
 import com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.presenter.SpecificCategoryPresenter;
 import com.example.food_app_planner.archistartcode.presentation.filterbycategorypage.presenter.SpecificCategoryPresenterImp;
 import com.example.food_app_planner.archistartcode.presentation.mealbyid.view.OnClickMealListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 

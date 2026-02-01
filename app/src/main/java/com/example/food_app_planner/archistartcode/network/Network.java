@@ -9,6 +9,8 @@ import com.example.food_app_planner.archistartcode.data.datasource.remote.filter
 import com.example.food_app_planner.archistartcode.data.datasource.remote.ingrediantremote.IngredientService;
 import com.example.food_app_planner.archistartcode.data.datasource.remote.randommealremote.RandomMealService;
 
+
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -26,6 +28,7 @@ public class Network {
         Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl("https://www.themealdb.com/api/json/v1/1/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build();
         randomMealService=retrofit.create(RandomMealService.class);
         categoryServic=retrofit.create(CategoryServic.class);

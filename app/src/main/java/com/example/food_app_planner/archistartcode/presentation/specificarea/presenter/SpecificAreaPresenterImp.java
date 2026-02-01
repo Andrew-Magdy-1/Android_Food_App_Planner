@@ -2,12 +2,13 @@ package com.example.food_app_planner.archistartcode.presentation.specificarea.pr
 
 import android.content.Context;
 
-import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMeals;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyarearemote.FilterAreaNetworkResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.filterarearepo.FilterAreaRepo;
 import com.example.food_app_planner.archistartcode.presentation.specificarea.view.SpecificAreaView;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SpecificAreaPresenterImp implements SpecificAreaPresenter{
     private FilterAreaRepo filterAreaRepo;
@@ -22,18 +23,12 @@ public class SpecificAreaPresenterImp implements SpecificAreaPresenter{
 
     @Override
     public void getAllAreaMeal() {
-        filterAreaRepo.getAreaMealsFromRepo(area,new FilterAreaNetworkResponse() {
-            @Override
-            public void onSuccess(List<AreaMeals> areaMealsList) {
-                specificAreaView.onSuccess(areaMealsList);
-
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                specificAreaView.onFailure(errorMessage);
-            }
-        });
+        filterAreaRepo.getAreaMealsFromRepo(area).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(item->{
+                    specificAreaView.onSuccess(item.meals);
+                },error->{
+                    specificAreaView.onFailure(error.getMessage());
+                });
 
     }
 }

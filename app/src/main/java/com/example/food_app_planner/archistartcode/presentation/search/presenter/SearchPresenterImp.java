@@ -2,17 +2,7 @@ package com.example.food_app_planner.archistartcode.presentation.search.presente
 
 import android.content.Context;
 
-import com.example.food_app_planner.archistartcode.data.datasource.models.category.Category;
-import com.example.food_app_planner.archistartcode.data.datasource.models.countries.Country;
-import com.example.food_app_planner.archistartcode.data.datasource.models.filterbyarea.AreaMeals;
-import com.example.food_app_planner.archistartcode.data.datasource.models.filterbycategoryname.CategoryDetails;
 import com.example.food_app_planner.archistartcode.data.datasource.models.ingredient.Ingredient;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.categoryremote.CategoryNetworkResponse;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.countryremote.CountryNetworkResponse;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyarearemote.FilterAreaNetworkResponse;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbycategory.FilterByCategoryNetworkResponse;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.filterbyingrediant.FilterByIngredientNetworkResponse;
-import com.example.food_app_planner.archistartcode.data.datasource.remote.ingrediantremote.IngredientNetworkResponse;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.countryrepo.CountryRepo;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.filterarearepo.FilterAreaRepo;
 import com.example.food_app_planner.archistartcode.data.datasource.repositores.filterbycategoryrepo.FilterByCategoryRepo;
@@ -22,6 +12,9 @@ import com.example.food_app_planner.archistartcode.data.datasource.repositores.i
 import com.example.food_app_planner.archistartcode.presentation.search.view.SearchView;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SearchPresenterImp implements SearchPresenter{
     private SearchView searchView;
@@ -45,99 +38,76 @@ public class SearchPresenterImp implements SearchPresenter{
 
     @Override
     public void getAllCategories() {
-        countryRepo.getCatFromRepo(new CategoryNetworkResponse() {
-            @Override
-            public void onSuccess(List<Category> categoryList) {
-                searchView.onCategoriesSuccess(categoryList);
-
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                searchView.onFailure(errorMessage);
-
-            }
-        });
+        countryRepo.getCatFromRepo().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(item->{
+                    searchView.onCategoriesSuccess(item.categories);
+                });
     }
 
     @Override
     public void getAllCountries() {
-        country.getCountriesFromRepo(new CountryNetworkResponse() {
-            @Override
-            public void onSunccess(List<Country> countryList) {
-                searchView.onCountriesSuccess(countryList);
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                searchView.onFailure(errorMessage);
-            }
-        });
+        country.getCountriesFromRepo().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(item->{
+                                    searchView.onCountriesSuccess(item.meals);
+                                });
+//        country.getCountriesFromRepo(new CountryNetworkResponse() {
+//            @Override
+//            public void onSunccess(List<Country> countryList) {
+//                searchView.onCountriesSuccess(countryList);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorMessage) {
+//                searchView.onFailure(errorMessage);
+//            }
+//        });
     }
 
     @Override
     public void getAllIngredients() {
-        ingredientRepo.getIngredientsFromRepo(new IngredientNetworkResponse() {
-            @Override
-            public void onSuccess(List<Ingredient> ingredientList) {
-                searchView.onIngredientsSuccess(ingredientList);
-            }
+        ingredientRepo.getIngredientsFromRepo().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(item->{searchView.onIngredientsSuccess(item.meals);},
+                                        error->{searchView.onFailure(error.getMessage());});
 
-            @Override
-            public void onFailure(String errorMessage) {
-                searchView.onFailure(errorMessage);
-
-            }
-        });
     }
 
     @Override
     public void filterByCategory(String categoryName) {
-        filterByCategoryRepo.getCategoryToFilterFromRepo(categoryName, new FilterByCategoryNetworkResponse() {
+        filterByCategoryRepo.getCategoryToFilterFromRepo(categoryName).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(item->{
 
-            @Override
-            public void onSuccess(List<CategoryDetails> categoryDetailsList) {
-                searchView.onMealsSuccess(categoryDetailsList);
+                    searchView.onMealsSuccess(item.meals);
+                },error->{
+                            searchView.onFailure(error.getMessage());
+                });
 
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                searchView.onFailure(errorMessage);
-            }
-        });
     }
 
     @Override
     public void filterByCountry(String countryName) {
-        filterAreaRepo.getAreaMealsFromRepo(countryName, new FilterAreaNetworkResponse() {
+        filterAreaRepo.getAreaMealsFromRepo(countryName).
+                subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(item->{
+                                    searchView.onAreaMealsSuccess(item.meals);
+                                },error->{
+                                    searchView.onFailure(error.getMessage());
+                                        }
+                                );
 
-            @Override
-            public void onSuccess(List<AreaMeals> areaMealsList) {
-
-                searchView.onAreaMealsSuccess(areaMealsList);
-
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                searchView.onFailure(errorMessage);
-            }
-        });
     }
 
     @Override
     public void filterByIngredient(String ingredientName) {
-        filterByIngredientRepo.getIngredientMealsFromRepo(ingredientName, new FilterByIngredientNetworkResponse() {
-            @Override
-            public void onSunccess(List<CategoryDetails> categoryDetailsList) {
-                searchView.onMealsSuccess(categoryDetailsList);
-            }
+        filterByIngredientRepo.getIngredientMealsFromRepo(ingredientName).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(item->{
+                                    searchView.onMealsSuccess(item.meals);
+                                },error->{
+                                    searchView.onFailure(error.getMessage());
+                                });
 
-            @Override
-            public void onFailure(String errorMessage) {
-                searchView.onFailure(errorMessage);
-            }
-        });
     }
 }
